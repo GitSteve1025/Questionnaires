@@ -88,7 +88,8 @@ public class SecurityConfiguration {
     // 跨域配置
     private CorsConfigurationSource corsConfigurationSource () {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");// test 实际要改为 web
+        configuration.addAllowedOriginPattern("http://localhost:5173");// test 实际要改为 web
+        configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("*");
