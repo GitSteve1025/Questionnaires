@@ -35,7 +35,7 @@ public class SecurityConfiguration {
     DataSource dataSource;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, PersistentTokenRepository repository) throws Exception {
         return http
                 .authorizeHttpRequests(conf -> conf
                         .requestMatchers("/api/auth/**").permitAll()
@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                 // 记住我功能
                 .rememberMe()
                 .rememberMeParameter("remember")
-                .tokenRepository(persistentTokenRepository())
+                .tokenRepository(repository)
                 .tokenValiditySeconds(3600 * 24 * 7) // 记住 7 days
 
                 .and()
@@ -78,10 +78,10 @@ public class SecurityConfiguration {
 
     // 记住我功能
     @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
+    public PersistentTokenRepository tokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);
-        jdbcTokenRepository.setCreateTableOnStartup(true);
+        jdbcTokenRepository.setCreateTableOnStartup(false);
         return jdbcTokenRepository;
     }
 
