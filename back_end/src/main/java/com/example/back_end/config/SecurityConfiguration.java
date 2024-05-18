@@ -78,10 +78,10 @@ public class SecurityConfiguration {
 
     // 记住我功能
     @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
+    public PersistentTokenRepository tokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);
-        jdbcTokenRepository.setCreateTableOnStartup(true);
+        jdbcTokenRepository.setCreateTableOnStartup(false);
         return jdbcTokenRepository;
     }
 
