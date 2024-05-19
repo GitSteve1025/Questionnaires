@@ -5,6 +5,7 @@ import {Lock, User} from "@element-plus/icons-vue";
 
 <template>
   <div style="width:100vw;height:100vh;overflow:hidden;display:flex">
+
     <div style="flex: 1">
       <!--主页贴图-->
       <el-image style="width:100%;height:100%" fit="cover"
@@ -16,10 +17,16 @@ import {Lock, User} from "@element-plus/icons-vue";
     </div>
 
     </div>
-    <div style="width:400px;margin-left:10px;text-align:center;background-color:white">
-      <router-view></router-view>
+    <div style="width:400px;margin-left:10px;text-align:center;background-color:white;z-index:1">
+      <router-view v-slot="{Component}">
+        <transition name="el-fade-in-linear">
+          <component :is="Component"/>
+        </transition>
+      </router-view>
 
     </div>
+
+
   </div>
 </template>
 
