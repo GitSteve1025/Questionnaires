@@ -4,6 +4,7 @@ import {Lock, User} from "@element-plus/icons-vue";
 import {reactive} from "vue";
 import {ElMessage} from "element-plus";
 import {post} from "@/net"
+import router from "@/router/index.js";
 
 const form=reactive({
   username:'',
@@ -17,10 +18,13 @@ const login=()=>{
   }
   else{
     post('/api/auth/login',{
-        username:'',
-        password:'',
-        remember:false
-    })
+        username:form.username,
+        password:form.password,
+        remember:form.remember
+    }),(message)=>{
+      ElMessage.success(message)
+      router.push('/index')
+    }
   }
 }
 </script>
@@ -57,14 +61,15 @@ const login=()=>{
 
   <div style="margin-top:40px">
     <el-button @click="login()" style="width:270px" type="success" plain>
-      立即登录
+       立即登录
     </el-button>
   </div>
   <el-divider>
     <span style="color:grey;font-size:13px" >没有账号</span>
   </el-divider>
   <div>
-    <el-button style="margin-top:20px;width:200px"type="warning" plain>注册账号</el-button>
+    <el-button style="margin-top:20px;width:200px "type="warning" plain @click="router.push('/register')">
+      注册账号</el-button>
   </div>
 </template>
 
