@@ -15,16 +15,15 @@ const form=reactive({
 const login=()=>{
   if(!form.username||!form.password){
     ElMessage.warning('请填写用户名和密码！')
-  }
-  else{
+  } else {
     post('/api/auth/login',{
-        username:form.username,
-        password:form.password,
-        remember:form.remember
-    }),(message)=>{
+        username: form.username,
+        password: form.password,
+        remember: form.remember
+    }, (message)=> {
       ElMessage.success(message)
       router.push('/index')
-    }
+    })
   }
 }
 </script>
