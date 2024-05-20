@@ -10,4 +10,7 @@ public interface UserMapper {
     @Select("select * from db_account where username = #{text} or email = #{text}")
     Account findAccountByNameOrEmail(String text);
 
+    // 添加账号到数据库
+    @Select("insert into db_account (email, username, password) values (#{email}, #{username}, #{password})")
+    Integer createAccount(String username, String password, String email);
 }
