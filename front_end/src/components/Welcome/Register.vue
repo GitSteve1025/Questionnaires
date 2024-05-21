@@ -57,6 +57,7 @@ const rules = {
 
 const formRef = ref()
 const isEmailValid = ref(false)
+const coldTime = ref(0)//是否已经点击发送验证码
 
 const onValidate = (prop, isValid) => {
   if(prop === 'email')
@@ -78,6 +79,20 @@ const register = () => {
     } else {
       ElMessage.warning('请完整填写注册表单内容！')
     }
+  })
+}
+
+
+const validateEmail = () => {
+  coldTime.value = 60
+  post('/api/auth/valid-register-email', {
+    email: form.email
+  }, (message) => {
+    ElMessage.success(message)
+    setInterval(() => coldTime.value--, 1000)
+  }, (message) => {
+    ElMessage.warning(message)
+    coldTime.value = 0
   })
 }
 </script>
@@ -130,7 +145,9 @@ const register = () => {
             </el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="success" :disabled="!isEmailValid">获取验证码</el-button>
+            <el-button type="success" @click="validateEmail" :disabled="!isEmailValid||coldTime>0">
+              {{coldTime>0?'请稍后'+coldTime+'秒':'获取验证码'}}
+            </el-button>
           </el-col>
         </el-row>
       </el-form-item>
