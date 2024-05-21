@@ -1,6 +1,6 @@
 package com.example.back_end.service.impl;
 
-import com.example.back_end.entity.Account;
+import com.example.back_end.entity.auth.Account;
 import com.example.back_end.mapper.UserMapper;
 import com.example.back_end.service.AuthorizeService;
 import jakarta.annotation.Resource;
@@ -66,8 +66,8 @@ public class AuthorizeServiceImpl implements AuthorizeService {
      */
 
     @Override
-    public String sendValidateEmail(String email, String sessionId) {
-        String key = "email:" + sessionId + ":" + email;
+    public String sendValidateEmail(String email, String sessionId,boolean hasAccount) {
+        String key = "email:" + sessionId + ":" + email+":"+hasAccount;
         // 判断是否含有 key
         if (Boolean.TRUE.equals(template.hasKey(key))) {
             Long expire = Optional.ofNullable(template.getExpire(key, TimeUnit.SECONDS)).orElse(180L);// 默认180，默认false
@@ -75,10 +75,12 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                 return "请求频繁，请稍后再试！";
             }
         }
+        Account account = mapper.findAccountByNameOrEmail(email);
+        if(hasAccount && account==null) return "没有此邮件地址的账户";
+        if(!hasAccount && account!=null) return "此邮箱已被其他用户注册";
         // 邮箱注册过账号
-        if (mapper.findAccountByNameOrEmail(email) != null) {
+        if (mapper.findAccountByNameOrEmail(email) != null)
             return "此邮箱已被其他用户注册";
-        }
         // 生成 验证码
         Random random = new Random();
         int code = random.nextInt(900000) + 100000; // 生成 [100000, 999999] 的验证码
@@ -97,22 +99,20 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         }
     }
 
+    //验证和注册
     @Override
     public String validateAndRegister(String username, String password, String email, String code, String sessionId) {
-        String key = "email:" + sessionId + ":" + email;
-        // 用户名已存在
-        if (mapper.findAccountByNameOrEmail(username) != null) {
-            return "用户名已存在";
-        }
+        String key = "email:" + sessionId + ":" + email+":false";
         // 判断是否含有 key
         if (Boolean.TRUE.equals(template.hasKey(key))) {
             String s = template.opsForValue().get(key);
-            if (s == null) {
-                return "验证码失效，请重新请求";
-            }
+            if (s == null) return "验证码失效，请重新请求";
             if (s.equals(code)) {// 验证码正确 创建账号
+                Account account= mapper.findAccountByNameOrEmail(username);
+                if(account!=null) return "此用户名已被注册，请更换用户名";
+                template.delete(key);//验证码使用后删除
                 password = encoder.encode(password);// 密码加密
-                if (mapper.createAccount(username, password, email) == null) {// 插入成功返回 null
+                if (mapper.createAccount(username, password, email) >0) {// 插入成功返回 null
                     return null;
                 } else {
                     return "内部错误，请联系管理员";
@@ -124,4 +124,29 @@ public class AuthorizeServiceImpl implements AuthorizeService {
             return "请先发送验证码";
         }
     }
+
+    //验证
+    @Override
+    public String validateOnly(String email, String code, String sessionId) {
+        String key = "email:" + sessionId + ":" + email+":true";
+        if (Boolean.TRUE.equals(template.hasKey(key))) {
+            String s = template.opsForValue().get(key);
+            if (s == null) return "验证码失效，请重新请求";
+            if (s.equals(code)) {// 验证码正确 创建账号
+                template.delete(key);//验证码使用后删除
+                return null;
+            } else {// 验证码错误
+                return "验证码错误";
+            }
+        } else {
+            return "请先发送验证码";
+        }
+    }
+
+    @Override
+    public boolean resetPassword(String password, String email) {
+        password=encoder.encode(password);
+        return mapper.resetPasswordByEmail(password,email)>0;
+    }
 }
+
