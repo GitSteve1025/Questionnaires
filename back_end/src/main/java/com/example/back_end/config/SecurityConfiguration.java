@@ -53,26 +53,25 @@ public class SecurityConfiguration {
                         .logoutSuccessHandler(this::onLogoutSuccess)
                 )
                 // 记住我功能
-                .rememberMe()
-                .rememberMeParameter("remember")
-                .tokenRepository(repository)
-                .tokenValiditySeconds(3600 * 24 * 7) // 记住 7 days
-
-                .and()
+                .rememberMe(remember -> remember
+                        .rememberMeParameter("remember")
+                        .tokenRepository(repository)
+                        .tokenValiditySeconds(3600 * 24 * 7)// 记住 7 days
+                )
                 .userDetailsService(authorizeService)
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors()
-                .configurationSource(this.corsConfigurationSource())
-
-                .and()
+                // 跨域访问
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource())
+                )
+                // session 管理
                 .sessionManagement(conf -> conf
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 // 页面不存在处理
-                .exceptionHandling()
-                .authenticationEntryPoint(this::onAuthenticationFailure)
-
-                .and()
+                .exceptionHandling(handling -> handling
+                        .authenticationEntryPoint(this::onAuthenticationFailure)
+                )
                 .build();
     }
 
@@ -88,8 +87,8 @@ public class SecurityConfiguration {
     // 跨域配置
     private CorsConfigurationSource corsConfigurationSource () {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("http://localhost:5173");// test 实际要改为 web
         configuration.setAllowCredentials(true);
+        configuration.addAllowedOriginPattern("*");// test 实际要改为 web
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("*");
