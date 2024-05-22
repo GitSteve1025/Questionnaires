@@ -3,8 +3,11 @@
 import {Lock, User} from "@element-plus/icons-vue";
 import {reactive} from "vue";
 import {ElMessage} from "element-plus";
-import {post} from "@/net"
+import {get, post} from "@/net"
 import router from "@/router/index.js";
+import {useStore} from "@/stores";
+
+const store =useStore()
 
 const form=reactive({
   username:'',
@@ -12,7 +15,7 @@ const form=reactive({
   remember:false
 })
 
-const login=()=>{
+const login = () => {
   if(!form.username||!form.password){
     ElMessage.warning('请填写用户名和密码！')
   } else {
@@ -22,7 +25,12 @@ const login=()=>{
         remember: form.remember
     }, (message)=> {
       ElMessage.success(message)
-      router.push('/index')
+      get('/api/user/me',(message)=>{
+        store.auth.user=message
+        router.push('/index')
+      },()=>{
+        store.auth.user=null
+      })
     })
   }
 }
@@ -54,7 +62,7 @@ const login=()=>{
       <el-checkbox v-model="form.remember" label="记住密码" size="large" />
     </el-col>
     <el-col :span="12" style="text-align: right;margin-top:5px">
-      <el-link>忘记密码？</el-link>
+      <el-link @click="router.push('/forget')">忘记密码？</el-link>
     </el-col>
   </el-row>
 
@@ -67,7 +75,7 @@ const login=()=>{
     <span style="color:grey;font-size:13px" >没有账号</span>
   </el-divider>
   <div>
-    <el-button style="margin-top:20px;width:200px "type="warning" plain @click="router.push('/register')">
+    <el-button style="margin-top:20px;width:200px " type="warning" plain @click="router.push('/register')">
       注册账号</el-button>
   </div>
 </template>
