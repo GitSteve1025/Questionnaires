@@ -11,7 +11,7 @@ const form=reactive({
   password:'',
   password_repeat:'',
   email:'',
-  code:''
+   code:''
 })
 
 const validateUsername = (rule, value, callback) => {
