@@ -15,8 +15,8 @@ function post(url,data,success,failure=defaultFailure,error=defaultError){
         else failure(data.message,data.status)
     }).catch(error)
 }
-function get(url,data,success,failure=defaultFailure,error=defaultError){
-    axios.post(url,data,{
+function get(url,success,failure=defaultFailure,error=defaultError){
+    axios.get(url,{
         withCredentials:true//确认请求
     }).then(({data} )=>{
         if(data.success) success(data.message,data.status)

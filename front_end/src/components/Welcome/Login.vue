@@ -12,7 +12,7 @@ const form=reactive({
   remember:false
 })
 
-const login=()=>{
+const login = () => {
   if(!form.username||!form.password){
     ElMessage.warning('请填写用户名和密码！')
   } else {
