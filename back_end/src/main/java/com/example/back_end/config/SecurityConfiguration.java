@@ -60,19 +60,16 @@ public class SecurityConfiguration {
                         .tokenRepository(repository)
                         .tokenValiditySeconds(3600 * 24 * 7)// 记住 7 days
                 )
-                .csrf(AbstractHttpConfigurer::disable)
-                // 跨域访问
-                .cors(cors -> cors
-                        .configurationSource(this.corsConfigurationSource())
-                )
-                // session 管理
-                .sessionManagement(conf -> conf
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 // 页面不存在处理
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(this::onAuthenticationFailure)
                 )
+                // 跨域访问
+                .cors(cors -> cors
+                        .configurationSource(this.corsConfigurationSource())
+                )
+                // 跨站请求伪造
+                .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 
@@ -85,12 +82,14 @@ public class SecurityConfiguration {
         return jdbcTokenRepository;
     }
 
+    // 认证管理器用来对登录请求进行处理
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity security) throws Exception {
+        security
+                .getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(authorizeService);
         return security
                 .getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(authorizeService)
-                .and()
                 .build();
     }
 
