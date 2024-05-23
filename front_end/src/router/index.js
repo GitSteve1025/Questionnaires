@@ -34,16 +34,16 @@ const router = createRouter({
   ]
 })
 //基本页面跳转拦截
-router.beforeEach((to,from,next)=>{
-  const store=useStore()
-  if(store.auth.user!=null && to.name.startsWith('welcome-')){
+router.beforeEach((to, from, next) => {
+  const store = useStore()
+  if(store.auth.user != null && to.name.startsWith('Welcome-')) {
     next('/index')
-  }else if(store.auth.user==null&&to.fullPath.startsWith('/index')){
+  } else if(store.auth.user == null && to.fullPath.startsWith('/index')) {
     next('/')
-  }else if(to.matched.length===0){
+  } else if(to.matched.length === 0){
     next('/index')
-  }else{
+  } else {
     next()
   }
 })
-export default router
+ export default router

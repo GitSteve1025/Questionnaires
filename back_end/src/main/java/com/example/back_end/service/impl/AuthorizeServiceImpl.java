@@ -109,7 +109,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                 if(account!=null) return "此用户名已被注册，请更换用户名";
                 template.delete(key);//验证码使用后删除
                 password = encoder.encode(password);// 密码加密
-                if (mapper.createAccount(username, password, email) >0) {// 插入成功返回 null
+                if (mapper.createAccount(username, password, email) == null) {// 插入成功返回 null
                     return null;
                 } else {
                     return "内部错误，请联系管理员";
@@ -143,7 +143,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     @Override
     public boolean resetPassword(String password, String email) {
         password=encoder.encode(password);
-        return mapper.resetPasswordByEmail(password,email)>0;
+        return mapper.resetPasswordByEmail(password,email) > 0;
     }
 }
 
