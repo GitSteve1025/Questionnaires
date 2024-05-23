@@ -37,11 +37,11 @@ const validatePassword = (rule, value, callback) => {
 const rules = {
   username: [
     { validator: validateUsername, trigger: ['blur', 'change'] },
-    { min: 2, max: 10, message: '用户名的长度必须在2-10个字符之间', trigger: ['blur', 'change'] },
+    { min: 2, max: 8, message: '用户名的长度必须在2-8个字符之间', trigger: ['blur', 'change'] },
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 3, max: 16, message: '密码的长度必须在3-16个字符之间', trigger: ['blur', 'change'] }
+    { min: 6, max: 16, message: '密码的长度必须在6-16个字符之间', trigger: ['blur', 'change'] }
   ],
   password_repeat: [
     { validator: validatePassword, trigger: ['blur', 'change'] },
@@ -85,11 +85,11 @@ const register = () => {
 
 const validateEmail = () => {
   coldTime.value = 60
-  setInterval(() => coldTime.value--, 1000)//设置延迟
   post('/api/auth/valid-register-email', {
     email: form.email
   }, (message) => {
     ElMessage.success(message)
+    setInterval(() => coldTime.value--, 1000)//设置延迟
   }, (message) => {
     ElMessage.warning(message)
     coldTime.value = 0
@@ -105,7 +105,7 @@ const validateEmail = () => {
   <div style="margin-top:50px">
     <el-form :model="form" :rules="rules" @validate="onValidate" ref="formRef">
       <el-form-item prop="username">
-        <el-input v-model="form.username" :maxlength="10" type="text" placeholder="用户名">
+        <el-input v-model="form.username" :maxlength="8" type="text" placeholder="用户名">
           <template #prefix>
             <el-icon><User /></el-icon>
           </template>
@@ -121,7 +121,7 @@ const validateEmail = () => {
       </el-form-item>
 
       <el-form-item prop="password_repeat">
-        <el-input v-model="form.password_repeat":maxlength="16" type="password" placeholder="重置密码" >
+        <el-input v-model="form.password_repeat":maxlength="16" type="password" placeholder="重新输入密码" >
           <template #prefix>
             <el-icon><Lock /></el-icon>
           </template>
@@ -155,7 +155,7 @@ const validateEmail = () => {
   </div>
   <div style="margin-top:10px">
     <div style="margin-top:100px">
-      <el-button style="width:100px" type="warning" @click="register" >
+      <el-button style="width:100px" type="warning" @click="register" plain >
         立即注册
       </el-button>
     </div>

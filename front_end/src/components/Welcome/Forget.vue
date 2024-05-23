@@ -9,10 +9,11 @@ import {ElMessage} from "element-plus";
 const form =reactive({
   email:'',
   code:'',
-  //password:''
+  password:'',
+  password_repeat:''
 })
 const active=ref(0)
-
+const validcode=ref(0);//是否成功发送邮件，并且验证码输入正确，初始化为0
 const validatePassword = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请再次输入密码'))
@@ -33,7 +34,7 @@ const onValidate = (prop, isValid) => {
 }
 const validateEmail = () => {
   coldTime.value = 60
-  post('/api/auth/valid-register-email', {
+  post('/api/auth/valid-reset-email', {
     email: form.email
   }, (message) => {
     ElMessage.success(message)
@@ -44,6 +45,35 @@ const validateEmail = () => {
   })
 }
 
+const startReset =() =>{
+  formRef.value.validate((isValid) => {
+    if(isValid) {
+      post('api/auth/start-reset',{
+        email: form.email,
+        code: form.code
+      },()=>{
+        active.value++
+      })
+    } else {
+      ElMessage.warning('请填写电子邮件地址和验证码')
+    }
+  })
+}
+
+const doReset = () =>{
+  formRef.value.validate((isValid) => {
+    if(isValid) {
+      post('api/auth/do-reset',{
+        password: form.password
+      },(message)=>{
+        ElMessage.success(message)
+        router.push('/')
+      })
+    } else {
+      ElMessage.warning('请填写新的密码')
+    }
+  })
+}
 
 const rules={
   email: [
@@ -107,7 +137,7 @@ const rules={
      </div>
 
      <div style="margin-top:70px">
-       <el-button @click="active=1" style="width: 270px;"  type="danger" plain>开始重置密码</el-button>
+       <el-button @click="startReset()" style="width: 270px;"  type="danger" plain>开始重置密码</el-button>
      </div>
    </div>
 
@@ -130,7 +160,7 @@ const rules={
             </el-input>
           </el-form-item>
           <el-form-item prop="password_repeat">
-            <el-input v-model="form.password_repeat" :maxlength="16" type="password" placeholder="重复密码" >
+            <el-input v-model="form.password_repeat" :maxlength="16" type="password" placeholder="重复新密码" >
               <template #prefix>
                 <el-icon><Lock /></el-icon>
               </template>
@@ -139,22 +169,11 @@ const rules={
         </el-form>
       </div>
       <div style="margin-top:70px">
-        <el-button @click="active=2" style="width: 270px;"  type="danger" plain>立即重置密码</el-button>
+        <el-button @click="doReset()" style="width: 270px;"  type="danger" plain>立即重置密码</el-button>
       </div>
 
     </div>
   </transition>
-
-  <div style ="" v-if="active===2">
-    <div style=" margin-top:100px">
-      <div style="font-size:25px;font-weight:bold"> 成功重置密码</div>
-      <div style="font-size: 14px;color:gray">请牢记您的新密码，以防丢失</div>
-    </div>
-    <div style="font-size:14px;line-height: 15px;margin-top: 50px">
-      <span style="color:grey">已重置密码</span>
-      <el-link type="primary" style="translate: 0 -2px" @click="router.push('/')">立即登录</el-link>
-    </div>
-  </div>
 
 </template>
 
