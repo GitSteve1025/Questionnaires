@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -58,11 +60,10 @@ public class SecurityConfiguration {
                         .tokenRepository(repository)
                         .tokenValiditySeconds(3600 * 24 * 7)// 记住 7 days
                 )
-                .userDetailsService(authorizeService)
                 .csrf(AbstractHttpConfigurer::disable)
                 // 跨域访问
                 .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource())
+                        .configurationSource(this.corsConfigurationSource())
                 )
                 // session 管理
                 .sessionManagement(conf -> conf
@@ -82,6 +83,15 @@ public class SecurityConfiguration {
         jdbcTokenRepository.setDataSource(dataSource);
         jdbcTokenRepository.setCreateTableOnStartup(false);
         return jdbcTokenRepository;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity security) throws Exception {
+        return security
+                .getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(authorizeService)
+                .and()
+                .build();
     }
 
     // 跨域配置
@@ -110,6 +120,8 @@ public class SecurityConfiguration {
 
     // 登录成功处理
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
+
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(JSONObject.toJSONString(RestBean.success("登录成功"))); // 转换为 json
     }
