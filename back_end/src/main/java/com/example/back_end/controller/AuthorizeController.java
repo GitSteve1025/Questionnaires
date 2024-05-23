@@ -24,7 +24,7 @@ public class AuthorizeController {
     @Resource
     AuthorizeService authorizeService;
 
-    // 发送邮件
+    //（注册时） 发送邮件
     @PostMapping("/valid-register-email")
     public RestBean<String> validateRegisterEmail(@Pattern(regexp = EMAIL_REGEX) @RequestParam("email") String email, HttpSession session) {
         String s = authorizeService.sendValidateEmail(email, session.getId(),false);

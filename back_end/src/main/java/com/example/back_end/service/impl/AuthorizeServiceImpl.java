@@ -78,9 +78,6 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         Account account = mapper.findAccountByNameOrEmail(email);
         if(hasAccount && account==null) return "没有此邮件地址的账户";
         if(!hasAccount && account!=null) return "此邮箱已被其他用户注册";
-        // 邮箱注册过账号
-        if (mapper.findAccountByNameOrEmail(email) != null)
-            return "此邮箱已被其他用户注册";
         // 生成 验证码
         Random random = new Random();
         int code = random.nextInt(900000) + 100000; // 生成 [100000, 999999] 的验证码
