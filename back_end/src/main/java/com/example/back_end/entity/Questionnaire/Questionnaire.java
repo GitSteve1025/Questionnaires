@@ -5,8 +5,19 @@ import lombok.Data;
 
 import java.util.Date;
 
+// 枚举类，表示问卷状态
 enum State {
+    UNPUBLISHED(0, "Unpublished"),
+    PUBLISHED(1, "Published"),
+    ENDED(2, "ended");
 
+    int code;
+    String description;
+
+    State(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
 }
 
 @Data
@@ -27,5 +38,4 @@ public class Questionnaire {
     Date startTime;
     // 问卷结束时间
     Date endTime;
-
 }
