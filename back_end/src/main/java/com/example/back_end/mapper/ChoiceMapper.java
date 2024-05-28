@@ -2,10 +2,7 @@ package com.example.back_end.mapper;
 
 import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import com.example.back_end.entity.Question.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -19,7 +16,7 @@ public interface ChoiceMapper {
     @Insert("insert into choice " +
             "(questionId, sequenceId, content) " +
             "values " +
-            "(questionId = #{question.questionId}, sequenceId = #{choice.sequenceId}, content = #{choice.content})")
+            "(#{question.questionId}, #{choice.sequenceId}, #{choice.content})")
     Integer createChoice(Question question, Choice choice);
 
     // 修改选项
@@ -28,4 +25,12 @@ public interface ChoiceMapper {
             "content = #{content} " +
             "where choiceId = #{choiceId}")
     Integer updateChoice(Choice choice);
+
+    // 删除某个选项
+    @Delete("delete from choice where choiceId = #{choiceId}")
+    Integer deleteChoice(Choice choice);
+
+    // 删除某个问题的所有选项
+    @Delete("delete from  choice where questionId = #{questionId}")
+    Integer deleteAllChoicesOfQuestion(Question question);
 }

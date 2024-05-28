@@ -2,10 +2,7 @@ package com.example.back_end.mapper;
 
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -22,6 +19,7 @@ public interface QuestionMapper {
             "(#{questionnaire.questionnaireId}, #{question.sequenceId}, #{question.title}, #{question.category}, #{question.necessary})")
     Integer createQuestion(Questionnaire questionnaire, Question question);
 
+    // 修改问题
     @Update("update question set " +
             "sequenceId = #{sequenceId}, " +
             "title = #{title}, " +
@@ -29,4 +27,8 @@ public interface QuestionMapper {
             "necessary = #{necessary} " +
             "where questionId = #{questionId}")
     Integer updateQuestion(Question question);
+
+    // 删除问题
+    @Delete("delete from question where questionId = #{questionId}")
+    Integer deleteQuestion(Question question);
 }

@@ -3,6 +3,7 @@ package com.example.back_end;
 
 import com.example.back_end.entity.Question.Categories;
 import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
+import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.Questionnaire.State;
@@ -41,18 +42,8 @@ class BackEndApplicationTests {
 
     @Test
     void contextLoads() {
-        // 测试 ChoiceMapper
-        Question question = new Question();
-        question.setQuestionId(1);
 
-        Choice choice = new Choice();
-        choice.setSequenceId(0);
-        choice.setContent("Test choice");
 
-        if (choiceMapper.createChoice(question, choice) > 0) {
-            System.out.println("createChoice success");
-        } else {
-            System.out.println("createChoice fail");
-        }
+
     }
 }

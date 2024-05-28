@@ -30,4 +30,8 @@ public interface QuestionnaireMapper {
             "endTime = #{endTime} " +
             "where questionnaireId = #{questionnaireId}")
     Integer updateQuestionnaire(Questionnaire questionnaire);
+
+    // 删除该问卷
+    @Delete("delete from questionnaire where questionnaireId = #{questionnaireId}")
+    Integer deleteQuestionnaire(Questionnaire questionnaire);
 }
