@@ -23,5 +23,5 @@ public interface BlankInfoMapper {
 
     // 删除某个填空的所有回答
     @Delete("delete from blank_info where blankId = #{blankId}")
-    Integer updateBlankInfo(Blank blank);
+    Integer deleteBlankInfo(Blank blank);
 }
