@@ -10,6 +10,10 @@ public class QuestionnaireController {
     // 所有问卷
     private ArrayList<Questionnaire> questionnaires;
 
+    QuestionnaireController(int userId) {
+
+
+    }
 
     // 添加问卷
     void addQuestionnaire() {

@@ -5,10 +5,6 @@ import lombok.Data;
 
 import java.util.Date;
 
-enum State {
-
-}
-
 @Data
 public class Questionnaire {
     // 问卷 ID
@@ -27,5 +23,4 @@ public class Questionnaire {
     Date startTime;
     // 问卷结束时间
     Date endTime;
-
 }
