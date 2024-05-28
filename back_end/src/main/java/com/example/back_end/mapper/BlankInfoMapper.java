@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface Blank_InfoMapper {
+public interface BlankInfoMapper {
     // 获取该填空的所有回答
     @Select("select * from blank_info where blankId = #{blankId}")
     List<String> getBlankInfo(Blank blank);

@@ -17,6 +17,7 @@ public interface ChoiceMapper {
             "(questionId, sequenceId, content) " +
             "values " +
             "(#{question.questionId}, #{choice.sequenceId}, #{choice.content})")
+    @Options(useGeneratedKeys = true, keyProperty = "choice.choiceId", keyColumn = "choiceId")
     Integer createChoice(Question question, Choice choice);
 
     // 修改选项

@@ -2,6 +2,7 @@ package com.example.back_end.mapper;
 
 import com.example.back_end.entity.auth.Account;
 import com.example.back_end.entity.user.AccountUser;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -16,7 +17,7 @@ public interface UserMapper {
     AccountUser findAccountUserByNameOrEmail(String text);
 
     // 添加账号到数据库
-    @Select("insert into db_account (email, username, password) values (#{email}, #{username}, #{password})")
+    @Insert("insert into db_account (email, username, password) values (#{email}, #{username}, #{password})")
     Integer createAccount(String username, String password, String email);
 
     @Update("update db_account set password = #{password} where email = #{email}")

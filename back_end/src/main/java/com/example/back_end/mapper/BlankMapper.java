@@ -15,6 +15,7 @@ public interface BlankMapper {
             "(questionId, minCount, maxCount) " +
             "values " +
             "(#{question.questionId}, #{blank.minCount}, #{blank.maxCoubt})")
+    @Options(useGeneratedKeys = true, keyProperty = "blank.blankId", keyColumn = "blankId")
     Integer createBlank(Question question, Blank blank);
 
     // 修改 Blank

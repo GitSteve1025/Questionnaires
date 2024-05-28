@@ -4,7 +4,7 @@ import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
-public interface Choice_InfoMapper {
+public interface ChoiceInfoMapper {
     // 获取该选项被选择的次数
     @Select("select * from choice_info where choiceId = #{choiceId}")
     Integer getChoiceInfo(Choice choice);

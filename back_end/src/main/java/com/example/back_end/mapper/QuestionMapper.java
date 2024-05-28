@@ -17,6 +17,7 @@ public interface QuestionMapper {
             "(questionnaireId, sequenceId, title, category, necessary) " +
             "values " +
             "(#{questionnaire.questionnaireId}, #{question.sequenceId}, #{question.title}, #{question.category}, #{question.necessary})")
+    @Options(useGeneratedKeys = true, keyProperty = "question.questionId", keyColumn = "questionId")
     Integer createQuestion(Questionnaire questionnaire, Question question);
 
     // 修改问题

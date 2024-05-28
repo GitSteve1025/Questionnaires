@@ -2,16 +2,13 @@ package com.example.back_end.mapper;
 
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.auth.Account;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Mapper
-public interface Questionnaire_InfoMapper {
+public interface QuestionnaireInfoMapper {
     // 获取填写该问卷的所有用户 ID
     @Select("select * from questionnaire_info where questionnaireId = #{questionnaireId}")
     List<Integer> getAccountsOfQuestionnaire(Questionnaire questionnaire);

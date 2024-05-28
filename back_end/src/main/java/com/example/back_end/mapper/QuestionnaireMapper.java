@@ -18,6 +18,7 @@ public interface QuestionnaireMapper {
             "values " +
             "(#{account.id}, #{questionnaire.title}, #{questionnaire.description}, #{questionnaire.state}, " +
             "#{questionnaire.createdTime}, #{questionnaire.startTime}, #{questionnaire.endTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "questionnaire.questionnaireId", keyColumn="questionnaireId")
     Integer createQuestionnaire(Account account, Questionnaire questionnaire);
 
     //修改问卷
