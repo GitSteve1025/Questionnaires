@@ -23,4 +23,9 @@ public class Questionnaire {
     Date startTime;
     // 问卷结束时间
     Date endTime;
+
+    public Questionnaire() {
+        this.state = State.UNPUBLISHED; // 默认未发布
+        createdTime = new Date(); // 创建时间
+    }
 }

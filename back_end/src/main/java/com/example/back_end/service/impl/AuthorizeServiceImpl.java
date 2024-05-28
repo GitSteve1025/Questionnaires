@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +28,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     String from;
 
     @Resource
-    UserMapper mapper;
+    UserMapper userMapper;
 
     @Resource
     MailSender mailSender;
@@ -44,7 +45,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
         if (username == null) {// 用户名为空
             throw new UsernameNotFoundException("用户名不能为空");
         }
-        Account account =  mapper.findAccountByNameOrEmail(username);
+        Account account =  userMapper.findAccountByNameOrEmail(username);
         if (account == null) {// 用户名不存在
             throw new UsernameNotFoundException("用户名或密码错误");
         }
@@ -75,7 +76,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
                 return "请求频繁，请稍后再试！";
             }
         }
-        Account account = mapper.findAccountByNameOrEmail(email);
+        Account account = userMapper.findAccountByNameOrEmail(email);
         if(hasAccount && account==null) return "没有此邮件地址的账户";
         if(!hasAccount && account!=null) return "此邮箱已被其他用户注册";
         // 生成 验证码
@@ -105,11 +106,11 @@ public class AuthorizeServiceImpl implements AuthorizeService {
             String s = template.opsForValue().get(key);
             if (s == null) return "验证码失效，请重新请求";
             if (s.equals(code)) {// 验证码正确 创建账号
-                Account account= mapper.findAccountByNameOrEmail(username);
+                Account account= userMapper.findAccountByNameOrEmail(username);
                 if(account!=null) return "此用户名已被注册，请更换用户名";
                 template.delete(key);//验证码使用后删除
                 password = encoder.encode(password);// 密码加密
-                if (mapper.createAccount(username, password, email) > 0) {// 插入成功返回 null
+                if (userMapper.createAccount(username, password, email) > 0) {// 插入成功返回 null
                     return null;
                 } else {
                     return "内部错误，请联系管理员";
@@ -143,7 +144,13 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     @Override
     public boolean resetPassword(String password, String email) {
         password=encoder.encode(password);
-        return mapper.resetPasswordByEmail(password,email) > 0;
+        return userMapper.resetPasswordByEmail(password,email) > 0;
+    }
+
+    @Override
+    public Account currentAccount() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userMapper.findAccountByNameOrEmail(user.getUsername());
     }
 }
 

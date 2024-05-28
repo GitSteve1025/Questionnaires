@@ -12,6 +12,10 @@ public interface QuestionnaireMapper {
     @Select("select * from questionnaire where userId = #{id}")
     List<Questionnaire> getQuestionnaires(Account account);
 
+    // 获取单个问卷
+    @Select("select * from questionnaire where questionnaireId = #{questionnaireId}")
+    Questionnaire getQuestionnaire(int questionnaireId);
+
     // 加入问卷
     @Insert("insert into questionnaire " +
             "(userId, title, description, state, createdTime, startTime, endTime) " +
