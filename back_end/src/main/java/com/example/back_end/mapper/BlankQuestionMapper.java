@@ -15,7 +15,7 @@ public interface BlankQuestionMapper {
             "(questionId, validation, type) " +
             "values " +
             "(#{questionId}, #{validation}, #{type})")
-    Integer insertBlankQuestion(BlankQuestion blankQuestion);
+    Integer createBlankQuestion(BlankQuestion blankQuestion);
 
     // 修改填空限制信息
     @Update("update blankquestion set " +
