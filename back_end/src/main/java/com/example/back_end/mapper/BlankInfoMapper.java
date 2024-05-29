@@ -1,17 +1,14 @@
 package com.example.back_end.mapper;
 
 import com.example.back_end.entity.Question.BlankQuestion.Blank;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface BlankInfoMapper {
     // 获取该填空的所有回答
-    @Select("select * from blank_info where blankId = #{blankId}")
+    @Select("select content from blank_info where blankId = #{blankId}")
     List<String> getBlankInfo(Blank blank);
 
     // 添加某个填空的回答
@@ -23,5 +20,5 @@ public interface BlankInfoMapper {
 
     // 删除某个填空的所有回答
     @Delete("delete from blank_info where blankId = #{blankId}")
-    Integer updateBlankInfo(Blank blank);
+    Integer deleteBlankInfo(Blank blank);
 }
