@@ -8,8 +8,7 @@ import java.util.List;
 @Mapper
 public interface BlankInfoMapper {
     // 获取该填空的所有回答
-    @Select("select * from blank_info where blankId = #{blankId}")
-    @Result(column = "content")
+    @Select("select content from blank_info where blankId = #{blankId}")
     List<String> getBlankInfo(Blank blank);
 
     // 添加某个填空的回答
