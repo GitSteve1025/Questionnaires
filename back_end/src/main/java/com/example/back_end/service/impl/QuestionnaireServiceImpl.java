@@ -29,24 +29,40 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         if (questionnaireMapper.updateQuestionnaire(questionnaire) > 0) {
             return null;
         } else {
-            return "修改失败";
+            return "未知错误，请联系管理员";
         }
     }
 
     @Override
     public String deleteQuestionnaire(int questionnaireId) {
-        Questionnaire questionnaire = new Questionnaire();
-        questionnaire.setQuestionnaireId(questionnaireId);
-        if (questionnaireMapper.deleteQuestionnaire(questionnaire) > 0) {
+        if (questionnaireMapper.deleteQuestionnaire(questionnaireId) > 0) {
             return null;
         } else {
-            return "删除失败";
+            return "未知错误，请联系管理员";
         }
     }
 
     @Override
-    public Questionnaire findQuestionnaire(int questionnaireId) {
+    public Questionnaire createrFindQuestionnaire(Account account, int questionnaireId) {
+        Questionnaire questionnaire =  questionnaireMapper.getQuestionnaire(questionnaireId);
+        if (questionnaire == null) {
+            return null;
+        }
+        Integer userId = questionnaireMapper.getUserIdOfQuestionnaire(questionnaireId);
+        if (userId != account.getId()) {// 不是创建者的问卷
+            return null;
+        }
+        return questionnaire;
+    }
+
+    @Override
+    public Questionnaire getQuestionnaire(int questionnaireId) {
         return questionnaireMapper.getQuestionnaire(questionnaireId);
+    }
+
+    @Override
+    public Integer userIdOfQuestionnaire(int questionnaireId) {
+        return questionnaireMapper.getUserIdOfQuestionnaire(questionnaireId);
     }
 
     @Override

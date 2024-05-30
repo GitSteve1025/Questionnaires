@@ -15,7 +15,7 @@ public interface ChoiceQuestionMapper {
             "(questionId, minSelected, maxSelected) " +
             "values " +
             "(#{questionId}, #{minSelected}, #{maxSelected})")
-    Integer insertChoiceQuestion(ChoiceQuestion choiceQuestion);
+    Integer createChoiceQuestion(ChoiceQuestion choiceQuestion);
 
     // 修改选择题的限制信息
     @Update("update choicequestion set " +

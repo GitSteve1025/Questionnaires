@@ -12,8 +12,12 @@ public interface QuestionnaireService {
     String updateQuestionnaire(Questionnaire questionnaire);
     // 删除问卷
     String deleteQuestionnaire(int questionnaireId);
-    // 获取问卷
-    Questionnaire findQuestionnaire(int questionnaireId);
+    // 问卷创作者获取问卷
+    Questionnaire createrFindQuestionnaire(Account account, int questionnaireId);
+    // 其他人获取问卷
+    Questionnaire getQuestionnaire(int questionnaireId);
+    // 获取创建该问卷的 userId
+    Integer userIdOfQuestionnaire(int questionnaireId);
     // 获取该用户所有问卷
     List<Questionnaire> getAllQuestionnaire(Account account);
 }

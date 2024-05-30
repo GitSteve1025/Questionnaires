@@ -6,8 +6,7 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface ChoiceInfoMapper {
     // 获取该选项被选择的次数
-    @Select("select * from choice_info where choiceId = #{choiceId}")
-    @Result(column = "count")
+    @Select("select count from choice_info where choiceId = #{choiceId}")
     Integer getChoiceInfo(Choice choice);
 
     // 添加选项
