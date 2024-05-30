@@ -25,6 +25,6 @@ public interface BlankQuestionMapper {
     Integer updateBlankQuestion(BlankQuestion blankQuestion);
 
     // 删除填空限制信息
-    @Delete("delete from blankquestion where questionId = #{questionId}")
-    Integer deleteBlankQuestion(BlankQuestion blankQuestion);
+    @Delete("delete from blankquestion where questionId = #{blankQuestionId}")
+    Integer deleteBlankQuestion(int blankQuestionId);
 }

@@ -10,7 +10,15 @@ import java.util.List;
 public interface ChoiceMapper {
     // 获取问题的所有选项
     @Select("select * from choice where questionId = #{questionId}")
-    List<Choice> getChoices(Question question);
+    List<Choice> getChoices(int questionId);
+
+    // 获取选项
+    @Select("select * from choice where choiceId = #{choiceId}")
+    Choice getChoice(int choiceId);
+
+    // 获取该选项对应问题的 ID
+    @Select("select questionId from choice where choiceId = #{choiceId}")
+    Integer getQuestionIdOfChoice(int choiceId);
 
     // 添加选项
     @Insert("insert into choice " +
@@ -29,9 +37,9 @@ public interface ChoiceMapper {
 
     // 删除某个选项
     @Delete("delete from choice where choiceId = #{choiceId}")
-    Integer deleteChoice(Choice choice);
+    Integer deleteChoice(int choiceId);
 
     // 删除某个问题的所有选项
     @Delete("delete from  choice where questionId = #{questionId}")
-    Integer deleteAllChoicesOfQuestion(Question question);
+    Integer deleteAllChoicesOfQuestion(int questionId);
 }
