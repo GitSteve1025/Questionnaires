@@ -11,6 +11,10 @@ public class QuestionController {
     // 所有问题
     private ArrayList<Question> questions;
 
+    public QuestionController() {
+        questions = new ArrayList<>();
+    }
+
     // 添加问题
     void addQuestion(Categories questionType) {
         // to do
