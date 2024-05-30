@@ -29,7 +29,7 @@ const login = () => {
         store.auth.user=message
         router.push('/index')
       },()=>{
-        store.auth.user=null
+        store.auth.user = null
       })
     })
   }

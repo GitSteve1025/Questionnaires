@@ -19,6 +19,5 @@ public class WebConfiguration implements WebMvcConfigurer{
                 .addPathPatterns("/**")
                 .excludePathPatterns("/api/auth/**");//防止以/api/auth/开头的页面被拦截
 
-
     }
 }

@@ -31,8 +31,55 @@ const router = createRouter({
       name:'index',
       component:()=>import('@/views/IndexView.vue')
     }
+    ,{
+       path:'/backlayout',
+      name :'backlayout',
+      component:()=>import('@/views/BackLayoutView.vue'),
+      children:[//子路由
+        {
+          path:'InfoManage',
+          name:'backlayout-InfoManage',
+          component: ()=>import('@/components/BackLayout/InfoManage.vue'),
+          children:[//子子路由
+            {
+              path:'QuestionnaireInfo',
+              name:'InfoManage-QuestionnaireInfo',
+              component:()=>import('@/components/BackLayout/QuestionnaireInfo.vue'),
+            },
+            {
+              path:'QuestionInfo',
+              name:'InfoManage-QuestionInfo',
+              component:()=>import('@/components/BackLayout/QuestionInfo.vue'),
+            },
+            {
+              path:'AnswerInfo',
+              name:'InfoManage-AnswerInfo',
+              component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
+            }
+          ]
+        },
+        {
+          path:'UserManage',
+          name:'backlayout-UserManage',
+          component:( )=>import('@/components/BackLayout/UserManage.vue'),
+          children:[
+            {
+              path:'ManagerInfo',
+              name:'UserManage-ManagerInfo',
+              component:()=>('@/components/BackLayout/ManagerInfo.vue'),
+            },
+            {
+              path:'UserInfo',
+              name:'UserManage-UserInfo',
+              component:()=>import('@/components/BackLayout/UserInfo.vue'),
+            }
+          ]
+        }
+      ]
+    }
   ]
 })
+
 //基本页面跳转拦截
 router.beforeEach((to, from, next) => {
   const store = useStore()
