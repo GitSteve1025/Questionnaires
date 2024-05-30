@@ -29,21 +29,26 @@ const router = createRouter({
     {
       path:'/index',
       name:'index',
-      component:()=>import('@/views/IndexView.vue')
+      component:()=>import('@/views/IndexView.vue'),
+      children:[{
+        path:'mypage',
+        name:'index-mypage',
+        component:()=>import('@/components/Index/Mypage.vue')
+      }]
     }
   ]
 })
 //基本页面跳转拦截
-router.beforeEach((to, from, next) => {
-  const store = useStore()
-  if(store.auth.user != null && to.name.startsWith('Welcome-')) {
-    next('/index')
-  } else if(store.auth.user == null && to.fullPath.startsWith('/index')) {
-    next('/')
-  } else if(to.matched.length === 0){
-    next('/index')
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   const store = useStore()
+//   if(store.auth.user != null && to.name.startsWith('Welcome-')) {
+//     next('/index')
+//   } else if(store.auth.user == null && to.fullPath.startsWith('/index')) {
+//     next('/')
+//   } else if(to.matched.length === 0){
+//     next('/index')
+//   } else {
+//     next()
+//   }
+// })
  export default router
