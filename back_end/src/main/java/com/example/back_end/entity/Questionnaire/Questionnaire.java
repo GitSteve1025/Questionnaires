@@ -25,6 +25,7 @@ public class Questionnaire {
     Date endTime;
 
     public Questionnaire() {
+        questionController = new QuestionController();
         this.state = State.UNPUBLISHED; // 默认未发布
         createdTime = new Date(); // 创建时间
     }

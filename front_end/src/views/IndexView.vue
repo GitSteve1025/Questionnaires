@@ -10,7 +10,7 @@
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b"
-      @select="handleSelect"
+
       style="margin-top: 20px;height: 8vh"
   >
     <div class="welcome-title"  style="margin-left:10px;margin-top:10px;font-size: 40px;font-weight:bold;display:flex ">问卷星系统</div>
@@ -77,6 +77,16 @@
     </el-container>
   </div>
 
+  <div>
+    <el-button @click="" type="success">创建问卷</el-button>
+  </div>
+
+  <div>
+  <el-input v-model="format.title" type="title" placeholder="标题">输入问卷名</el-input>
+    <el-input v-model="format.description" type="description" placeholder="描述" style="margin-top: 10px">输入问卷名</el-input>
+  <el-button @click="create()"  style="margin-top: 10px"  type="info">确认</el-button>
+    <el-button @click="" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
+  </div>
 
   <div>
     <el-button @click="logout()" type="danger" plain>退出登录</el-button>
@@ -89,12 +99,47 @@
   import {ElMessage} from "element-plus";
   import router from "@/router";
   import {useStore} from "@/stores";
-  import { ref } from 'vue'
+  import {reactive, ref} from 'vue'
+  import {post} from "@/net"
+
 
   const activeIndex = ref('1')
   const activeIndex2 = ref('1')
 
+  const formRef=ref()
   const store=useStore()
+
+  const format =reactive({
+    title:[
+      {
+        required:true,message:'请输入标题',
+        min:1
+      }
+    ],
+    description:[
+      {
+        required:false,message:'请输入描述：',
+      }
+    ],
+  })
+
+  const create=()=>{
+    post('/questionnaires/create', {
+      title:format.title,
+      description:format.description,
+    }, (message) => {
+      ElMessage.success(message)
+      router.push("/index")
+    })
+  }
+    // formRef.value.validate((isValid) => {
+    //   if(isValid) {
+    //
+    //   } else {
+    //     ElMessage.warning('请完整填写表单内容！')
+    //   }
+    // )
+
 
   const mypage=()=>{
     get('',(message)=>{
