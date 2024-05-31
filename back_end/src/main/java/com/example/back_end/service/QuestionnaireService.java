@@ -20,4 +20,6 @@ public interface QuestionnaireService {
     Questionnaire findQuestionnaire(Account account, int questionnaireId);
     // 获取该用户所有问卷
     List<Questionnaire> getAllQuestionnaire(Account account);
+    // 获取问卷题目数量
+    Integer getNumberOfQuestionOfQuestionnaire(int questionnaireId);
 }

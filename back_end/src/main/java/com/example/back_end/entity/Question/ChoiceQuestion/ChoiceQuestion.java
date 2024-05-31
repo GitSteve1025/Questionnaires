@@ -1,6 +1,7 @@
 package com.example.back_end.entity.Question.ChoiceQuestion;
 
 import com.example.back_end.entity.Question.Question;
+import jdk.jfr.Category;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,15 +18,6 @@ public class ChoiceQuestion extends Question {
     private int maxSelected;
 
     public ChoiceQuestion() {
-
+        minSelected = 0;
     }
-
-    void addChoice(Choice choice) {
-        choices.add(choice);
-    }
-
-
-
-
-
 }

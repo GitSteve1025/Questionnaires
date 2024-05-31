@@ -10,7 +10,9 @@ import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.ChoiceQuestionService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
     @Resource
     QuestionnaireMapper questionnaireMapper;

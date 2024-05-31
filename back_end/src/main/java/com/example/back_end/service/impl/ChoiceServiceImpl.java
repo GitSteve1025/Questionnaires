@@ -8,9 +8,11 @@ import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.ChoiceService;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ChoiceServiceImpl implements ChoiceService {
     @Resource
     ChoiceMapper choiceMapper;
@@ -83,7 +85,7 @@ public class ChoiceServiceImpl implements ChoiceService {
 
     // 获取选项
     @Override
-    public Choice getChoice(Account account, int choiceId) {
+    public Choice findChoice(Account account, int choiceId) {
         if (belongsToAccount(account, choiceId)) {
             return choiceMapper.getChoice(choiceId);
         }

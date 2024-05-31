@@ -2,6 +2,7 @@ package com.example.back_end.service.impl;
 
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.auth.Account;
+import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.QuestionnaireService;
 import jakarta.annotation.Resource;
@@ -13,6 +14,9 @@ import java.util.List;
 public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Resource
     QuestionnaireMapper questionnaireMapper;
+
+    @Resource
+    QuestionMapper questionMapper;
 
     // 获取创建该问卷的 userId
     @Override
@@ -79,5 +83,13 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public List<Questionnaire> getAllQuestionnaire(Account account) {
         return questionnaireMapper.getQuestionnaires(account);
+    }
+
+    // 获取问卷题目数量
+    @Override
+    public Integer getNumberOfQuestionOfQuestionnaire(int questionnaireId) {
+        Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setQuestionnaireId(questionnaireId);
+        return questionMapper.getQuestions(questionnaire).size();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.back_end.entity.Question.BlankQuestion;
 
+import com.example.back_end.entity.Question.Categories;
 import com.example.back_end.entity.Question.Question;
 import lombok.Data;
 
@@ -11,4 +12,10 @@ public class BlankQuestion extends Question {
     private Boolean validation;
     // 数据验证的类型
     private Type type;
+
+    public BlankQuestion() {
+        this.setCategory(Categories.BLANK_QUESTION);
+        this.validation = false;
+        this.type = Type.NULL;
+    }
 }

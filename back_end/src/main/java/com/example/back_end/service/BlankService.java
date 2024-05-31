@@ -16,5 +16,5 @@ public interface BlankService {
     // 修改blank
     String updateBlank(Account account, Blank blank);
     // 获取blank
-     Blank getBlank(Account account, int questionId);
+     Blank findBlank(Account account, int questionId);
 }

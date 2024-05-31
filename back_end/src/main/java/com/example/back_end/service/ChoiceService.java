@@ -18,7 +18,7 @@ public interface ChoiceService {
     // 修改选项
     String updateChoice(Account account, Choice choice);
     // 获取选项
-    Choice getChoice(Account account, int choiceId);
+    Choice findChoice(Account account, int choiceId);
     // 获取问题的所有选项
     List<Choice> getChoices(Account account, int questionId);
 }

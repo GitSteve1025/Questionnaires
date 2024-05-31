@@ -8,7 +8,9 @@ import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.BlankService;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BlankServiceImpl implements BlankService {
     @Resource
     BlankMapper blankMapper;
@@ -81,7 +83,7 @@ public class BlankServiceImpl implements BlankService {
 
     // 获取blank
     @Override
-    public Blank getBlank(Account account, int questionId) {
+    public Blank findBlank(Account account, int questionId) {
         Integer questionnaireId = questionMapper.getQuestionnaireIdOfQuestion(questionId);
         if (questionnaireId == null) { // 问卷不存在
             return null;

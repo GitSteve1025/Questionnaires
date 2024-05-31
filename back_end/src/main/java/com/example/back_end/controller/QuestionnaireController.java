@@ -6,7 +6,6 @@ import com.example.back_end.entity.auth.Account;
 import com.example.back_end.service.AuthorizeService;
 import com.example.back_end.service.QuestionnaireService;
 import jakarta.annotation.Resource;
-import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ import java.util.List;
 // @RequestBody json 格式
 
 // 问卷接口
-@Data
 @Validated
 @RestController
 @RequestMapping("/questionnaires")
@@ -55,9 +53,25 @@ public class QuestionnaireController {
         }
     }
 
+    // 删除问卷 (to do)
+    @PostMapping("/delete")
+    public RestBean<String> deleteQuestionnaire(@RequestBody Integer questionnaireId) {
+        Account account = authorizeService.currentAccount(); // 当前用户
+        Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId); // 先找到该问卷
+        if (questionnaire == null) {
+            return RestBean.failure(400, "问卷不存在");
+        }
+        String s = questionnaireService.deleteQuestionnaire(account, questionnaireId);
+        if (s == null) {
+            return RestBean.success("删除成功");
+        } else {
+            return RestBean.failure(400, s);
+        }
+    }
+
     // 修改问卷的标题/描述
     @PostMapping("/update")
-    public RestBean<String> updateQuestionnaire(@RequestBody int questionnaireId, // 需要提供问卷ID
+    public RestBean<String> updateQuestionnaire(@RequestBody Integer questionnaireId, // 需要提供问卷ID
                                                 @Length(min = 1) @RequestParam("title") String title, // 标题不能为空
                                                 @RequestParam(value = "description", required = false) String description) {
         Account account = authorizeService.currentAccount(); // 当前用户
@@ -75,24 +89,9 @@ public class QuestionnaireController {
         }
     }
 
-    // 删除问卷
-    @PostMapping("/delete")
-    public RestBean<String> deleteQuestionnaire(@RequestBody int questionnaireId) {
-        Account account = authorizeService.currentAccount(); // 当前用户
-        Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId); // 先找到该问卷
-        if (questionnaire == null) {
-            return RestBean.failure(400, "问卷不存在");
-        }
-        String s = questionnaireService.deleteQuestionnaire(account, questionnaireId);
-        if (s == null) {
-            return RestBean.success("删除成功");
-        } else {
-            return RestBean.failure(400, s);
-        }
-    }
-
+    // 查找问卷
     @GetMapping("/find")
-    public RestBean<Questionnaire> findQuestionnaire(@RequestParam int questionnaireId) {
+    public RestBean<Questionnaire> findQuestionnaire(@RequestBody Integer questionnaireId) {
         Account account = authorizeService.currentAccount();
         return RestBean.success(questionnaireService.findQuestionnaire(account, questionnaireId));
     }

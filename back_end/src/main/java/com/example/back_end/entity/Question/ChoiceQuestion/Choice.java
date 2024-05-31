@@ -13,5 +13,7 @@ public class Choice {
     // 选项状态 （是否被选）
     private Boolean state;
 
+    public Choice() {
 
+    }
 }

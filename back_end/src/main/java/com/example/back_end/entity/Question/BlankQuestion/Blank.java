@@ -15,4 +15,8 @@ public class Blank {
     // 最多字数
     private int maxCount;
 
+    public Blank() {
+        minCount = 0;
+        maxCount = Integer.MAX_VALUE;
+    }
 }
