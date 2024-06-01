@@ -10,6 +10,7 @@ import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
+import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.service.*;
 import jakarta.annotation.Resource;
 import org.hibernate.validator.constraints.Length;
@@ -35,6 +36,9 @@ public class QuestionController {
 
     @Resource
     BlankService blankService;
+
+    @Resource
+    QuestionService questionService;
 
     // 添加单选题
     @PostMapping("/create-SingleChoiceQuestion")
@@ -117,8 +121,12 @@ public class QuestionController {
     // 删除问题
     @PostMapping("/delete")
     public RestBean<String> deleteQuestion(int questionId) {
-        // to do
-        return null;
+        String s = questionService.deleteQuestion(authorizeService.currentAccount(), questionId);
+        if (s == null) {
+            return RestBean.success("删除成功");
+        } else {
+            return  RestBean.failure(400, s);
+        }
     }
 
     // 修改单选题
@@ -188,7 +196,4 @@ public class QuestionController {
             return RestBean.failure(400, s);
         }
     }
-
-    // 获取问题
-    // to do
 }

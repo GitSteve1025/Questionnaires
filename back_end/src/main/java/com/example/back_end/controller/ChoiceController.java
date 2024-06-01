@@ -8,6 +8,7 @@ import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.AuthorizeService;
 import com.example.back_end.service.ChoiceService;
+import com.example.back_end.service.QuestionService;
 import jakarta.annotation.Resource;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
@@ -28,44 +29,41 @@ public class ChoiceController {
     AuthorizeService authorizeService;
 
     @Resource
-    QuestionMapper questionMapper;
-
-    @Resource
-    QuestionnaireMapper questionnaireMapper;
+    QuestionService questionService;
 
     @PostMapping("/create")
     public RestBean<List<Choice>> createChoices(@RequestBody Integer questionId,
                                                 @RequestParam("content") List<String> content) {
         Account account = authorizeService.currentAccount();
-        Integer questionnaireId = questionMapper.getQuestionnaireIdOfQuestion(questionId);
-        if (questionnaireId == null) {
-            return null;
-        }
-        Integer userId = questionnaireMapper.getUserIdOfQuestionnaire(questionnaireId);
-        if (userId == null || userId != account.getId()) {
-            return null;
-        } // 权限验证
-        Question question = new Question();
-        question.setQuestionId(questionId);
-        List<Choice> choices = new ArrayList<>();
-        for (int i = 0; i < content.size(); i++) {
-            Choice choice = new Choice();
-            choice.setSequenceId(i + 1);
-            choice.setContent(content.get(i));
-            String s = choiceService.createChoice(question, choice);
-            if (s == null) {
-                choices.add(choice);
-            } else {
-                return null;
+        if (questionService.belongsToQuestion(account, questionId)) { // 权限验证
+            Question question = new Question();
+            question.setQuestionId(questionId);
+            List<Choice> choices = new ArrayList<>();
+            for (int i = 0; i < content.size(); i++) {
+                Choice choice = new Choice();
+                choice.setSequenceId(i + 1);
+                choice.setContent(content.get(i));
+                String s = choiceService.createChoice(question, choice);
+                if (s == null) {
+                    choices.add(choice);
+                } else {
+                    return null;
+                }
             }
+            return RestBean.success(choices);
         }
-        return RestBean.success(choices);
+        return RestBean.failure(400, null);
     }
 
     @PostMapping("/delete")
-    public RestBean<String> deleteChoice() {
-        // to do
-        return null;
+    public RestBean<String> deleteChoice(@RequestBody Integer choiceId) {
+        Account account = authorizeService.currentAccount();
+        String s = choiceService.deleteChoice(account, choiceId);
+        if (s == null) {
+            return RestBean.success("删除成功");
+        } else {
+            return RestBean.failure(400, "选项不存在");
+        }
     }
 
     @PostMapping("/update")

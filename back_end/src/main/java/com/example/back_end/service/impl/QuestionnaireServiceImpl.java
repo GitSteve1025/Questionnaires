@@ -20,14 +20,14 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     // 获取创建该问卷的 userId
     @Override
-    public Integer findUserIdOfQuestionnaire(int questionnaireId) {
+    public Integer getUserIdOfQuestionnaire(int questionnaireId) {
         return questionnaireMapper.getUserIdOfQuestionnaire(questionnaireId);
     }
 
     // 检查问卷是否属于 account
     @Override
     public Boolean belongsToAccount(Account account, int questionnaireId) {
-        Integer userId = findUserIdOfQuestionnaire(questionnaireId);
+        Integer userId = this.getUserIdOfQuestionnaire(questionnaireId);
         if (userId == null || userId != account.getId()) { // 问卷不存在 或 问卷不属于 account
             return false;
         }

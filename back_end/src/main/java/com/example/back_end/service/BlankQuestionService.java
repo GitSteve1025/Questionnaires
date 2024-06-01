@@ -6,7 +6,7 @@ import com.example.back_end.entity.auth.Account;
 
 public interface BlankQuestionService {
     // 获取该填空题创建者的ID
-    Integer findUserIdOfBlankQuestion(int blankQuestionId);
+    Integer getUserIdOfBlankQuestion(int blankQuestionId);
     // 检查是否属于 account
     Boolean belongsToAccount(Account account, int blankQuestionId);
     // 添加填空题

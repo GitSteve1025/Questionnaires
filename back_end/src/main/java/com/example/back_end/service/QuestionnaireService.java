@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface QuestionnaireService {
     // 获取创建该问卷的 userId
-    Integer findUserIdOfQuestionnaire(int questionnaireId);
+    Integer getUserIdOfQuestionnaire(int questionnaireId);
     // 检查问卷是否属于 account
     Boolean belongsToAccount(Account account, int questionnaireId);
     // 创建问卷

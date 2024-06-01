@@ -25,7 +25,7 @@ public class BlankQuestionServiceImpl implements BlankQuestionService {
 
     // 获取该填空题创建者的ID
     @Override
-    public Integer findUserIdOfBlankQuestion(int blankQuestionId) {
+    public Integer getUserIdOfBlankQuestion(int blankQuestionId) {
         Integer questionnaireId = questionMapper.getQuestionnaireIdOfQuestion(blankQuestionId);
         if (questionnaireId == null) { // 问卷不存在
             return null;
@@ -36,7 +36,7 @@ public class BlankQuestionServiceImpl implements BlankQuestionService {
     // 检查是否属于 account
     @Override
     public Boolean belongsToAccount(Account account, int blankQuestionId) {
-        Integer userId = findUserIdOfBlankQuestion(blankQuestionId);
+        Integer userId = getUserIdOfBlankQuestion(blankQuestionId);
         if (userId == null || userId != account.getId()) { // 不属于 account
             return false;
         }

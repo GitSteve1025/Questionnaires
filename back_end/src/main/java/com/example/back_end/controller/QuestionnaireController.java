@@ -1,9 +1,12 @@
 package com.example.back_end.controller;
 
+import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
+import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.AuthorizeService;
+import com.example.back_end.service.QuestionService;
 import com.example.back_end.service.QuestionnaireService;
 import jakarta.annotation.Resource;
 import org.hibernate.validator.constraints.Length;
@@ -26,6 +29,9 @@ public class QuestionnaireController {
 
     @Resource
     QuestionnaireService questionnaireService;
+
+    @Resource
+    QuestionService questionService;
 
     // 问卷所有者层面
 
@@ -53,7 +59,7 @@ public class QuestionnaireController {
         }
     }
 
-    // 删除问卷 (to do)
+    // 删除问卷
     @PostMapping("/delete")
     public RestBean<String> deleteQuestionnaire(@RequestBody Integer questionnaireId) {
         Account account = authorizeService.currentAccount(); // 当前用户
@@ -61,6 +67,15 @@ public class QuestionnaireController {
         if (questionnaire == null) {
             return RestBean.failure(400, "问卷不存在");
         }
+
+        List<Question> questions = questionService.getAllQuestions(account, questionnaireId);
+        for (Question question : questions) {
+            String s = questionService.deleteQuestion(account, question.getQuestionId());
+            if (s != null) {
+                return RestBean.failure(400, s);
+            }
+        }
+
         String s = questionnaireService.deleteQuestionnaire(account, questionnaireId);
         if (s == null) {
             return RestBean.success("删除成功");

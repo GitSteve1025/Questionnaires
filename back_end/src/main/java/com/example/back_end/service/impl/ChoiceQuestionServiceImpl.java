@@ -1,9 +1,11 @@
 package com.example.back_end.service.impl;
 
+import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.auth.Account;
+import com.example.back_end.mapper.ChoiceMapper;
 import com.example.back_end.mapper.ChoiceQuestionMapper;
 import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
@@ -11,6 +13,8 @@ import com.example.back_end.service.ChoiceQuestionService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
@@ -23,9 +27,12 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
     @Resource
     ChoiceQuestionMapper choiceQuestionMapper;
 
+    @Resource
+    ChoiceMapper choiceMapper;
+
     // 获取该选择题创建者的ID
     @Override
-    public Integer findUserIdOfChoiceQuestion(int choiceQuestionId) {
+    public Integer getUserIdOfChoiceQuestion(int choiceQuestionId) {
         Integer questionnaireId = questionMapper.getQuestionnaireIdOfQuestion(choiceQuestionId);
         if (questionnaireId == null) { // 问卷不存在
             return null;
@@ -36,7 +43,7 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
     // 检查是否属于 account
     @Override
     public Boolean belongsToAccount(Account account, int choiceQuestionId) {
-        Integer userId = findUserIdOfChoiceQuestion(choiceQuestionId);
+        Integer userId = getUserIdOfChoiceQuestion(choiceQuestionId);
         if (userId == null || userId != account.getId()) { // 不属于 account
             return false;
         }
@@ -58,6 +65,10 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
     @Override
     public String deleteChoiceQuestion(Account account, int choiceQuestionId) {
         if (belongsToAccount(account, choiceQuestionId)) { // 属于 account
+            List<Choice> choices = choiceMapper.getChoices(choiceQuestionId);
+            for (int i = 0; i < choices.size(); i++) {
+                choiceMapper.deleteChoice(choices.get(i).getChoiceId()); // 删除选项
+            }
             if (choiceQuestionMapper.deleteChoiceQuestion(choiceQuestionId) > 0
                     && questionMapper.deleteQuestion(choiceQuestionId) > 0) {
                 return null;
