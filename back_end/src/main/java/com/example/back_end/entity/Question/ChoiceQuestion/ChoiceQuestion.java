@@ -5,11 +5,12 @@ import jdk.jfr.Category;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ChoiceQuestion extends Question {
     // 选择题的选项
-    private ArrayList<Choice> choices;
+    private List<Choice> choices;
     // 已经选择选项的数量
     private int selectedCount;
     // 最少选择数
@@ -18,6 +19,7 @@ public class ChoiceQuestion extends Question {
     private int maxSelected;
 
     public ChoiceQuestion() {
+        choices = new ArrayList<>();
         minSelected = 0;
     }
 }

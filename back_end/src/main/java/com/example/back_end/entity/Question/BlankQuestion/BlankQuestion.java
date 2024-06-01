@@ -14,6 +14,7 @@ public class BlankQuestion extends Question {
     private Type type;
 
     public BlankQuestion() {
+        blank = new Blank();
         this.setCategory(Categories.BLANK_QUESTION);
         this.validation = false;
         this.type = Type.NULL;

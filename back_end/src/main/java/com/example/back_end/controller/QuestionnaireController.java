@@ -1,17 +1,19 @@
 package com.example.back_end.controller;
 
+import com.example.back_end.entity.Question.BlankQuestion.BlankQuestion;
+import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
-import com.example.back_end.service.AuthorizeService;
-import com.example.back_end.service.QuestionService;
-import com.example.back_end.service.QuestionnaireService;
+import com.example.back_end.service.*;
 import jakarta.annotation.Resource;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // @RequestParam 是前端必要参数
@@ -31,6 +33,18 @@ public class QuestionnaireController {
 
     @Resource
     QuestionService questionService;
+
+    @Resource
+    ChoiceQuestionService choiceQuestionService;
+
+    @Resource
+    ChoiceService choiceService;
+
+    @Resource
+    BlankQuestionService blankQuestionService;
+
+    @Resource
+    BlankService blankService;
 
     // 问卷所有者层面
 
@@ -107,7 +121,30 @@ public class QuestionnaireController {
     @GetMapping("/find")
     public RestBean<Questionnaire> findQuestionnaire(@RequestBody Integer questionnaireId) {
         Account account = authorizeService.currentAccount();
-        return RestBean.success(questionnaireService.findQuestionnaire(account, questionnaireId));
+        Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId);
+        if (questionnaire == null) {
+            return RestBean.failure(400, null);
+        }
+
+        List<Question> questions = questionService.getAllQuestions(account, questionnaireId);
+        for (Question question : questions) {
+            switch (question.getCategory()) {
+                case SINGLE_CHOICE_QUESTION :
+                case MULTIPLE_CHOICE_QUESTION :
+                    ChoiceQuestion choiceQuestion = choiceQuestionService.findChoiceQuestion(account, question.getQuestionId());
+                    choiceQuestion.setChoices(choiceService.getChoices(account, question.getQuestionId()));
+                    questionnaire.getQuestions().add(choiceQuestion);
+                    break;
+                case BLANK_QUESTION:
+                    BlankQuestion blankQuestion = blankQuestionService.findBlankQuestion(account, question.getQuestionId());
+                    blankQuestion.setBlank(blankService.findBlank(account, question.getQuestionId()));
+                    questionnaire.getQuestions().add(blankQuestion);
+                    break;
+                default:
+                    return RestBean.failure(400, null);
+            }
+        }
+        return RestBean.success(questionnaire);
     }
 
     // 展示所有问卷
