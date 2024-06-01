@@ -34,6 +34,7 @@ public class BlankQuestionServiceImpl implements BlankQuestionService {
     }
 
     // 检查是否属于 account
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public Boolean belongsToAccount(Account account, int blankQuestionId) {
         Integer userId = getUserIdOfBlankQuestion(blankQuestionId);

@@ -4,7 +4,6 @@ import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
-import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.AuthorizeService;
 import com.example.back_end.service.QuestionService;
 import com.example.back_end.service.QuestionnaireService;

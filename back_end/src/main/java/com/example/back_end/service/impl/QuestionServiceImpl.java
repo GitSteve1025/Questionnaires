@@ -3,7 +3,6 @@ package com.example.back_end.service.impl;
 import com.example.back_end.entity.Question.BlankQuestion.Blank;
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
-import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
 import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
@@ -44,6 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     // 检查是否属于 account
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public Boolean belongsToQuestion(Account account, Integer questionId) {
         Integer userId = getUserIdOfQuestion(questionId);
@@ -54,6 +54,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     // 删除问题
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public String deleteQuestion(Account account, Integer questionId) {
         if (belongsToQuestion(account, questionId)) {
@@ -64,19 +65,19 @@ public class QuestionServiceImpl implements QuestionService {
                 case MULTIPLE_CHOICE_QUESTION :
                     s = choiceQuestionService.deleteChoiceQuestion(account, questionId);
                     if (s == null) {
-                        return "删除成功";
+                        return null;
                     } else {
                         return s;
                     }
                 case BLANK_QUESTION :
-                    s = blankQuestionService.deleteBlankQuestion(account, questionId);
+                    Blank blank = blankService.findBlank(account, questionId);
+                    s = blankService.deleteBlank(account, blank.getBlankId());
                     if (s != null) {
                         return s;
                     }
-                    Blank blank = blankService.findBlank(account, questionId);
-                    s = blankService.deleteBlank(account, blank.getBlankId());
+                    s = blankQuestionService.deleteBlankQuestion(account, questionId);
                     if (s == null) {
-                        return "删除成功";
+                        return null;
                     } else {
                         return s;
                     }
