@@ -1,7 +1,6 @@
 package com.example.back_end.entity.Question.ChoiceQuestion;
 
 import com.example.back_end.entity.Question.Question;
-import jdk.jfr.Category;
 import lombok.Data;
 
 import java.util.ArrayList;

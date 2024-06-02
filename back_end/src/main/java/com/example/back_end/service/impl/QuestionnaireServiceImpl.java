@@ -1,6 +1,9 @@
 package com.example.back_end.service.impl;
 
+import com.example.back_end.entity.Question.BlankQuestion.BlankQuestion;
+import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
+import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
 import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
@@ -91,5 +94,32 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setQuestionnaireId(questionnaireId);
         return questionMapper.getQuestions(questionnaire).size();
+    }
+
+    @Override
+    public String checkQuestionnaire(Questionnaire questionnaire) {
+        for (ChoiceQuestion choiceQuestion : questionnaire.getChoiceQuestions()) {
+            if (choiceQuestion.getNecessary()) {
+                if (choiceQuestion.getSelectedCount() < choiceQuestion.getMinSelected()
+                        || choiceQuestion.getSelectedCount() > choiceQuestion.getMaxSelected()) {
+                    return "问题 " + choiceQuestion.getSequenceId() + " 填写格式错误";
+                }
+            }
+        }
+
+        for (BlankQuestion blankQuestion : questionnaire.getBlankQuestions()) {
+            if (blankQuestion.getNecessary()) {
+                // to do
+//                if (blankQuestion.getValidation()) {
+//
+//                }
+//                Blank blank = blankQuestion.getBlank();
+//                if (blank.getContent().length() < blank.getMinCount()
+//                        || blank.getContent().length() > blank.getMaxCount()) {
+//                    return "问题 " + blankQuestion.getSequenceId() + " 填写格式错误";
+//                }
+            }
+        }
+        return null;
     }
 }

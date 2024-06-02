@@ -16,6 +16,7 @@ public class Blank {
     private int maxCount;
 
     public Blank() {
+        state = Boolean.FALSE;
         minCount = 0;
         maxCount = Integer.MAX_VALUE;
     }

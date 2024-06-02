@@ -4,10 +4,9 @@ import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
-import com.example.back_end.mapper.QuestionMapper;
-import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.AuthorizeService;
 import com.example.back_end.service.ChoiceService;
+import com.example.back_end.service.InfoService;
 import com.example.back_end.service.QuestionService;
 import jakarta.annotation.Resource;
 import org.hibernate.validator.constraints.Length;
@@ -30,6 +29,9 @@ public class ChoiceController {
 
     @Resource
     QuestionService questionService;
+
+    @Resource
+    InfoService infoService;
 
     @PostMapping("/create")
     public RestBean<List<Choice>> createChoices(@RequestBody Integer questionId,
@@ -60,6 +62,7 @@ public class ChoiceController {
         Account account = authorizeService.currentAccount();
         String s = choiceService.deleteChoice(account, choiceId);
         if (s == null) {
+            infoService.deleteChoiceInfo(choiceId);
             return RestBean.success("删除成功");
         } else {
             return RestBean.failure(400, "选项不存在");

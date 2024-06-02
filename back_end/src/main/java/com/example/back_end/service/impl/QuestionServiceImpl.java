@@ -6,10 +6,7 @@ import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.auth.Account;
 import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
-import com.example.back_end.service.BlankQuestionService;
-import com.example.back_end.service.BlankService;
-import com.example.back_end.service.ChoiceQuestionService;
-import com.example.back_end.service.QuestionService;
+import com.example.back_end.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +29,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Resource
     BlankService blankService;
+
+    @Resource
+    InfoService infoService;
 
     @Override
     public Integer getUserIdOfQuestion(Integer questionId) {
@@ -77,6 +77,7 @@ public class QuestionServiceImpl implements QuestionService {
                     }
                     s = blankQuestionService.deleteBlankQuestion(account, questionId);
                     if (s == null) {
+                        infoService.deleteBlankInfo(blank.getBlankId());
                         return null;
                     } else {
                         return s;

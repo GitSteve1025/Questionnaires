@@ -1,19 +1,22 @@
 package com.example.back_end.controller;
 
 import com.example.back_end.entity.Question.BlankQuestion.BlankQuestion;
+import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
 import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
+import com.example.back_end.entity.Questionnaire.State;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
 import com.example.back_end.service.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.Resource;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 // @RequestParam 是前端必要参数
@@ -46,15 +49,10 @@ public class QuestionnaireController {
     @Resource
     BlankService blankService;
 
-    // 问卷所有者层面
+    @Resource
+    InfoService infoService;
 
-    // 通过标题搜索问卷
-    @GetMapping("/search")
-    public RestBean<List<Questionnaire>> searchQuestionnaire(@RequestParam @Length(min = 1) String title) {
-        // to do
-        // 根据标题搜索相关问卷
-        return null;
-    }
+    // 问卷所有者层面
 
     // 添加问卷
     @PostMapping("/create")
@@ -91,6 +89,7 @@ public class QuestionnaireController {
 
         String s = questionnaireService.deleteQuestionnaire(account, questionnaireId);
         if (s == null) {
+            infoService.deleteQuestionnaireInfo(questionnaireId);
             return RestBean.success("删除成功");
         } else {
             return RestBean.failure(400, s);
@@ -133,12 +132,12 @@ public class QuestionnaireController {
                 case MULTIPLE_CHOICE_QUESTION :
                     ChoiceQuestion choiceQuestion = choiceQuestionService.findChoiceQuestion(account, question.getQuestionId());
                     choiceQuestion.setChoices(choiceService.getChoices(account, question.getQuestionId()));
-                    questionnaire.getQuestions().add(choiceQuestion);
+                    questionnaire.getChoiceQuestions().add(choiceQuestion);
                     break;
                 case BLANK_QUESTION:
                     BlankQuestion blankQuestion = blankQuestionService.findBlankQuestion(account, question.getQuestionId());
                     blankQuestion.setBlank(blankService.findBlank(account, question.getQuestionId()));
-                    questionnaire.getQuestions().add(blankQuestion);
+                    questionnaire.getBlankQuestions().add(blankQuestion);
                     break;
                 default:
                     return RestBean.failure(400, null);
@@ -151,5 +150,110 @@ public class QuestionnaireController {
     @GetMapping("/display-all")
     public RestBean<List<Questionnaire>> displayAllQuestionnaires() {
         return RestBean.success(questionnaireService.getAllQuestionnaire(authorizeService.currentAccount()));
+    }
+
+    // 发布问卷
+    @PostMapping("/publish")
+    public RestBean<String> publishQuestionnaire(@RequestBody int questionnaireId,
+                                                 @RequestParam("startTime")
+                                                 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+                                                 @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                                 @RequestParam("endTime")
+                                                 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+                                                 @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime) {
+        Account account = authorizeService.currentAccount();
+        Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId);
+        if (questionnaire == null) {
+            return RestBean.failure(400, "问卷不存在");
+        }
+        questionnaire.setState(State.PUBLISHED);
+        questionnaire.setStartTime(startTime);
+        questionnaire.setEndTime(endTime);
+        String s = questionnaireService.updateQuestionnaire(account, questionnaire);
+        if (s == null) {
+            return RestBean.success("发布成功");
+        } else {
+            return RestBean.failure(400, s);
+        }
+    }
+
+
+    // 问卷填写者层面
+
+    // 获取问卷
+    @GetMapping("/get")
+    public RestBean<Questionnaire> getQuestionnaire(@RequestBody Integer questionnaireId) {
+        Integer userId = questionnaireService.getUserIdOfQuestionnaire(questionnaireId);
+        Account account = new Account();
+        account.setId(userId);
+        Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId);
+        if (questionnaire == null) {
+            return RestBean.failure(400, null);
+        }
+        Date currentTime = new Date();
+        if (questionnaire.getState() == State.PUBLISHED
+                && questionnaire.getStartTime().before(currentTime)
+                && questionnaire.getEndTime().after(currentTime)) {
+            List<Question> questions = questionService.getAllQuestions(account, questionnaireId);
+            for (Question question : questions) {
+                switch (question.getCategory()) {
+                    case SINGLE_CHOICE_QUESTION :
+                    case MULTIPLE_CHOICE_QUESTION :
+                        ChoiceQuestion choiceQuestion = choiceQuestionService.findChoiceQuestion(account, question.getQuestionId());
+                        choiceQuestion.setChoices(choiceService.getChoices(account, question.getQuestionId()));
+                        questionnaire.getChoiceQuestions().add(choiceQuestion);
+                        break;
+                    case BLANK_QUESTION:
+                        BlankQuestion blankQuestion = blankQuestionService.findBlankQuestion(account, question.getQuestionId());
+                        blankQuestion.setBlank(blankService.findBlank(account, question.getQuestionId()));
+                        questionnaire.getBlankQuestions().add(blankQuestion);
+                        break;
+                    default:
+                        return RestBean.failure(400, null);
+                }
+            }
+            return RestBean.success(questionnaire);
+        }
+        return RestBean.failure(400, null);
+    }
+
+    // 填写问卷
+    @PostMapping("/fill")
+    public RestBean<String> fillQuestionnaire(@RequestBody Questionnaire questionnaire) {
+        if (questionnaire == null || questionnaire.getState() == State.UNPUBLISHED) {
+            return RestBean.failure(400, "问卷不存在");
+        }
+        Date currentTime = new Date();
+        if (questionnaire.getStartTime().after(currentTime)) {
+            return RestBean.failure(400, "问卷未开始");
+        }
+        if (questionnaire.getEndTime().before(currentTime)) {
+            return RestBean.failure(400, "问卷已截止");
+        }
+
+        String s = questionnaireService.checkQuestionnaire(questionnaire);
+        if (s != null) {
+            return RestBean.failure(400, s);
+        }
+        System.out.println(questionnaire);
+        Account account = authorizeService.currentAccount();
+        infoService.insertQuestionnaireInfo(account, questionnaire);
+        for (ChoiceQuestion choiceQuestion : questionnaire.getChoiceQuestions()) {
+            if (choiceQuestion.getState()) {
+                for (Choice choice : choiceQuestion.getChoices()) {
+                    if (choice.getState()) {
+                        infoService.insertChoiceInfo(choice);
+                    }
+                }
+            }
+        }
+        for (BlankQuestion blankQuestion : questionnaire.getBlankQuestions()) {
+            if (blankQuestion.getState()) {
+                if (blankQuestion.getBlank().getState()) {
+                    infoService.insertBlankInfo(blankQuestion.getBlank());
+                }
+            }
+        }
+        return RestBean.success("问卷填写成功");
     }
 }

@@ -10,6 +10,7 @@ import com.example.back_end.mapper.ChoiceQuestionMapper;
 import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.ChoiceQuestionService;
+import com.example.back_end.service.InfoService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
 
     @Resource
     ChoiceMapper choiceMapper;
+
+    @Resource
+    InfoService infoService;
 
     // 获取该选择题创建者的ID
     @Override
@@ -68,6 +72,7 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
             List<Choice> choices = choiceMapper.getChoices(choiceQuestionId);
             for (int i = 0; i < choices.size(); i++) {
                 choiceMapper.deleteChoice(choices.get(i).getChoiceId()); // 删除选项
+                infoService.deleteChoiceInfo(choices.get(i).getChoiceId());
             }
             if (choiceQuestionMapper.deleteChoiceQuestion(choiceQuestionId) > 0
                     && questionMapper.deleteQuestion(choiceQuestionId) > 0) {

@@ -14,6 +14,6 @@ public class Choice {
     private Boolean state;
 
     public Choice() {
-
+        state = Boolean.FALSE;
     }
 }

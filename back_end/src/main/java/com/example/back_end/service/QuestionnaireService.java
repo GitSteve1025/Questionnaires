@@ -22,4 +22,6 @@ public interface QuestionnaireService {
     List<Questionnaire> getAllQuestionnaire(Account account);
     // 获取问卷题目数量
     Integer getNumberOfQuestionOfQuestionnaire(int questionnaireId);
+    // 填写的问卷合法性验证
+    String checkQuestionnaire(Questionnaire questionnaire);
 }
