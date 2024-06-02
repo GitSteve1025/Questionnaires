@@ -160,11 +160,11 @@ public class QuestionController {
 
     // 删除问题
     @PostMapping("/delete")
-    public RestBean<String> deleteQuestion(int questionId) {
+    public RestBean<String> deleteQuestion(@RequestBody Integer questionId) {
         Account account = authorizeService.currentAccount();
+        Integer questionnaireId = questionService.getQuestionnaireIdOfQuestion(questionId);
         String s = questionService.deleteQuestion(account, questionId);
         if (s == null) {
-            Integer questionnaireId = questionService.getQuestionnaireIdOfQuestion(questionId);
             List<Question> questions = questionService.getAllQuestions(account, questionnaireId);
             Collections.sort(questions, (left, right) -> left.getSequenceId() - right.getSequenceId()); // 升序排序
             for (int i = 0; i < questions.size(); i++) { // 重新编号
