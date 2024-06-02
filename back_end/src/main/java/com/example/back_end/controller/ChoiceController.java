@@ -1,19 +1,15 @@
 package com.example.back_end.controller;
 
 import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
-import com.example.back_end.entity.Question.Question;
 import com.example.back_end.entity.RestBean;
 import com.example.back_end.entity.auth.Account;
 import com.example.back_end.service.AuthorizeService;
 import com.example.back_end.service.ChoiceService;
 import com.example.back_end.service.InfoService;
-import com.example.back_end.service.QuestionService;
 import jakarta.annotation.Resource;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -28,34 +24,8 @@ public class ChoiceController {
     AuthorizeService authorizeService;
 
     @Resource
-    QuestionService questionService;
-
-    @Resource
     InfoService infoService;
 
-    @PostMapping("/create")
-    public RestBean<List<Choice>> createChoices(@RequestBody Integer questionId,
-                                                @RequestParam("content") List<String> content) {
-        Account account = authorizeService.currentAccount();
-        if (questionService.belongsToQuestion(account, questionId)) { // 权限验证
-            Question question = new Question();
-            question.setQuestionId(questionId);
-            List<Choice> choices = new ArrayList<>();
-            for (int i = 0; i < content.size(); i++) {
-                Choice choice = new Choice();
-                choice.setSequenceId(i + 1);
-                choice.setContent(content.get(i));
-                String s = choiceService.createChoice(question, choice);
-                if (s == null) {
-                    choices.add(choice);
-                } else {
-                    return null;
-                }
-            }
-            return RestBean.success(choices);
-        }
-        return RestBean.failure(400, null);
-    }
 
     @PostMapping("/delete")
     public RestBean<String> deleteChoice(@RequestBody Integer choiceId) {

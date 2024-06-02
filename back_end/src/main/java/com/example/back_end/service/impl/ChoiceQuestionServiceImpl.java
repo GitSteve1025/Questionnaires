@@ -70,9 +70,9 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
     public String deleteChoiceQuestion(Account account, int choiceQuestionId) {
         if (belongsToAccount(account, choiceQuestionId)) { // 属于 account
             List<Choice> choices = choiceMapper.getChoices(choiceQuestionId);
-            for (int i = 0; i < choices.size(); i++) {
-                choiceMapper.deleteChoice(choices.get(i).getChoiceId()); // 删除选项
-                infoService.deleteChoiceInfo(choices.get(i).getChoiceId());
+            for (Choice choice : choices) {
+                choiceMapper.deleteChoice(choice.getChoiceId()); // 删除选项
+                infoService.deleteChoiceInfo(choice.getChoiceId());
             }
             if (choiceQuestionMapper.deleteChoiceQuestion(choiceQuestionId) > 0
                     && questionMapper.deleteQuestion(choiceQuestionId) > 0) {
@@ -114,5 +114,18 @@ public class ChoiceQuestionServiceImpl implements ChoiceQuestionService {
             return choiceQuestion;
         }
         return null;
+    }
+
+    // 删除所有选项
+    @Override
+    public String deleteChoices(Account account, int choiceQuestionId) {
+        if (belongsToAccount(account, choiceQuestionId)) {
+            List<Choice> choices = choiceMapper.getChoices(choiceQuestionId);
+            for (Choice choice : choices) {
+                choiceMapper.deleteChoice(choice.getChoiceId());
+                infoService.deleteChoiceInfo(choice.getChoiceId());
+            }
+        }
+        return "没有权限";
     }
 }

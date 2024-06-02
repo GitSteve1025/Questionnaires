@@ -8,6 +8,7 @@ import com.example.back_end.mapper.QuestionMapper;
 import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.*;
 import jakarta.annotation.Resource;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +41,11 @@ public class QuestionServiceImpl implements QuestionService {
             return null;
         }
         return questionnaireMapper.getUserIdOfQuestionnaire(questionnaireId);
+    }
+
+    @Override
+    public Integer getQuestionnaireIdOfQuestion(Integer questionId) {
+        return questionMapper.getQuestionnaireIdOfQuestion(questionId);
     }
 
     // 检查是否属于 account
@@ -87,6 +93,24 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         return "问题不存在";
+    }
+
+    // 修改问题
+    @Override
+    public String updateQuestion(Account account, Question question) {
+        if (belongsToQuestion(account, question.getQuestionId())) {
+            questionMapper.updateQuestion(question); // 更新问题
+        }
+        return "没有权限";
+    }
+
+    // 获取问题
+    @Override
+    public Question getQuestion(Account account, Integer questionId) {
+        if (belongsToQuestion(account, questionId)) {
+            return questionMapper.getQuestion(questionId);
+        }
+        return null;
     }
 
     // 获取所有问题

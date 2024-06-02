@@ -18,4 +18,6 @@ public interface ChoiceQuestionService {
     String updateChoiceQuestion(Account account, ChoiceQuestion choiceQuestion);
     // 获取选择题
     ChoiceQuestion findChoiceQuestion(Account account, int choiceQuestionId);
+    // 删除所有选项
+    String deleteChoices(Account account, int choiceQuestionId);
 }
