@@ -52,7 +52,7 @@ const router = createRouter({
               component:()=>import('@/components/BackLayout/QuestionnaireInfo.vue'),
             },
             {
-              path:'QuestionInfo',
+              path:'QuestionInfo/:id',
               name:'InfoManage-QuestionInfo',
               component:()=>import('@/components/BackLayout/QuestionInfo.vue'),
             },
