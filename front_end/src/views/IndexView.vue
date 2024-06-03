@@ -14,11 +14,11 @@
       style="margin-top: 20px;height: 8vh"
   >
     <div class="welcome-title"  style="margin-left:10px;margin-top:10px;font-size: 40px;font-weight:bold;display:flex ">问卷星系统</div>
-    <el-menu-item index="1" style="margin-left: 30px">首页</el-menu-item>
+    <el-menu-item index="1" style="margin-left: 30px" @click="Gohomepage">首页</el-menu-item>
     <el-sub-menu index="2">
       <template #title>我的问卷</template>
-      <el-menu-item index="2-1" @click="router.push('/mypage')">创建问卷</el-menu-item>
-      <el-menu-item index="2-2">查看问卷</el-menu-item>
+      <el-menu-item index="2-1" @click="Gomypage">创建问卷</el-menu-item>
+      <el-menu-item index="2-2" @click="router.push('/index/showallquestion')">查看问卷</el-menu-item>
       <el-menu-item index="2-3">item three</el-menu-item>
       <el-sub-menu index="2-4">
         <template #title>item four</template>
@@ -30,69 +30,20 @@
     <el-menu-item index="3" disabled>客服中心</el-menu-item>
     <el-menu-item index="4">个人资料</el-menu-item>
   </el-menu>
-
   <div>
     <el-container>
       <el-header>
         <el-menu mode="horizontal" style="margin-top: 10px">
-
-
         </el-menu>
       </el-header>
     <div>
-      <el-main style="margin-top: 20px">
-        <el-row>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生就业意向调查</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生兼职情况调查</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生网购调查问卷</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生恋爱观调查</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
+      <router-view> </router-view>
     </div>
 
     </el-container>
   </div>
 
-  <div>
-    <el-button @click="" type="success">创建问卷</el-button>
-  </div>
-
-  <div>
-  <el-input v-model="format.title" type="title" placeholder="标题">输入问卷名</el-input>
-    <el-input v-model="format.description" type="description" placeholder="描述" style="margin-top: 10px">输入问卷名</el-input>
-  <el-button @click="create()"  style="margin-top: 10px"  type="info">确认</el-button>
-    <el-button @click="" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
-  </div>
-
-  <div>
-    <el-button @click="logout()" type="danger" plain>退出登录</el-button>
-  </div>
 </template>
-
 
 <script lang="ts" setup>
   import {get} from "@/net";
@@ -100,38 +51,12 @@
   import router from "@/router";
   import {useStore} from "@/stores";
   import {reactive, ref} from 'vue'
-  import {post} from "@/net"
-
 
   const activeIndex = ref('1')
   const activeIndex2 = ref('1')
 
-  const formRef=ref()
   const store=useStore()
 
-  const format =reactive({
-    title:[
-      {
-        required:true,message:'请输入标题',
-        min:1
-      }
-    ],
-    description:[
-      {
-        required:false,message:'请输入描述：',
-      }
-    ],
-  })
-
-  const create=()=>{
-    post('/questionnaires/create', {
-      title:format.title,
-      description:format.description,
-    }, (message) => {
-      ElMessage.success(message)
-      router.push("/index")
-    })
-  }
     // formRef.value.validate((isValid) => {
     //   if(isValid) {
     //
@@ -139,23 +64,13 @@
     //     ElMessage.warning('请完整填写表单内容！')
     //   }
     // )
-
-
-  const mypage=()=>{
-    get('',(message)=>{
-      router.push('')
-    })
-  }
-
-  const logout = () => {
-    get('/api/auth/logout', (message) => {
-      ElMessage.success(message)
-      store.auth.user=null
-      router.push('/')
-    })
+  const Gomypage=()=>{
+    router.push('/index/mypage')
+}
+  const Gohomepage=()=>{
+    router.push('/index/homepage')
   }
 </script>
-
 
 <style scoped>
 

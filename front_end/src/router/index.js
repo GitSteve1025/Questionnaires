@@ -30,26 +30,63 @@ const router = createRouter({
       path:'/index',
       name:'index',
       component:()=>import('@/views/IndexView.vue'),
-      children:[{
+      children:[
+          {
         path:'mypage',
         name:'index-mypage',
         component:()=>import('@/components/Index/Mypage.vue')
-      }]
+      },
+        {
+          path:'homepage',
+          name:'index-homepage',
+          component:()=>import('@/components/Index/Homepage.vue')
+        },
+        {
+          path:'choicepage',
+          name:'index-choicepage',
+          component:()=>import('@/components/Index/Choicepage.vue')
+        },
+        {
+          path:'singlechoice',
+          name:'index-singlechoice',
+          component:()=>import('@/components/Index/Singlechoice.vue')
+        },
+        {
+          path:'multiplechoice',
+          name:'index-multiplechoice',
+          component:()=>import('@/components/Index/MultipleChoice.vue')
+        },
+        {
+          path:'blankchoice',
+          name:'index-blankchoice',
+          component:()=>import('@/components/Index/Blankchoice.vue')
+        },
+        {
+          path:'show',
+          name:'index-show',
+          component:()=>import('@/components/Index/Show.vue')
+        },
+        {
+          path:'showallquestion',
+          name:'index-showallquestion',
+          component:()=>import('@/components/Index/ShowAllQuestion.vue')
+        }
+      ]
     }
   ]
 })
 //基本页面跳转拦截
 
-router.beforeEach((to, from, next) => {
-  const store = useStore()
-  if(store.auth.user != null && to.name.startsWith('Welcome-')) {
-    next('/index')
-  } else if(store.auth.user == null && to.fullPath.startsWith('/index')) {
-    next('/')
-  } else if(to.matched.length === 0){
-    next('/index')
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   const store = useStore()
+//   if(store.auth.user != null && to.name.startsWith('Welcome-')) {
+//     next('/index')
+//   } else if(store.auth.user == null && to.fullPath.startsWith('/index')) {
+//     next('/')
+//   } else if(to.matched.length === 0){
+//     next('/index')
+//   } else {
+//     next()
+//   }
+// })
  export default router
