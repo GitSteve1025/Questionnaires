@@ -6,11 +6,15 @@ public enum Type {
     PHONE(1, "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"),
     EMAIL(2, "^[a-z0-9A-Z]+[-|a-z0-9A-Z._]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$");
 
-    int code;
-    String regexp;
+    final int code;
+    final String regexp;
 
     Type(int code, String regexp) {
         this.code = code;
         this.regexp = regexp;
+    }
+
+    public String toString() {
+        return this.regexp;
     }
 }

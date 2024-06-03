@@ -3,8 +3,10 @@ import router from "@/router/index.js";
 
 
 const Gochoose=()=>{
+
   router.push('/index/choicepage')
 }
+
 </script>
 
 <template>

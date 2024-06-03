@@ -7,7 +7,6 @@ import {reactive} from 'vue'
 import {post} from "@/net"
 import {Document, Memo} from "@element-plus/icons-vue";
 
-
 const format =reactive({
   title:[
     {
@@ -20,7 +19,9 @@ const format =reactive({
       required:false,message:'请输入描述：',
     }
   ],
+  id:'',
 })
+
 
 
 const logout = () => {
@@ -28,6 +29,19 @@ const logout = () => {
     ElMessage.success(message)
     store.auth.user=null
     router.push('/')
+  })
+}
+const create=()=>{
+  post('/questionnaires/create', {
+    title:format.title,
+    description:format.description,
+  }, (message) => {
+    const result=JSON.parse(JSON.stringify(message));
+    format.id=result.questionnaireId;
+    ElMessage.success('创建问卷成功');
+    console.log(format.id);
+    router.push('/index/show');
+
   })
 }
 
