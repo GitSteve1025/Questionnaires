@@ -1,11 +1,82 @@
 <script setup>
+import {get} from "@/net";
 import {ElMessage} from "element-plus";
-import router from "@/router"
+import router from "@/router";
+import {useStore} from "@/stores";
+import {reactive} from 'vue'
+import {post} from "@/net"
+import {Document, Memo} from "@element-plus/icons-vue";
+
+const format =reactive({
+  title:[
+    {
+      required:true,message:'请输入标题',
+      min:1
+    }
+  ],
+  description:[
+    {
+      required:false,message:'请输入描述：',
+    }
+  ],
+  id:'',
+})
+
+
+
+const logout = () => {
+  get('/api/auth/logout', (message) => {
+    ElMessage.success(message)
+    store.auth.user=null
+    router.push('/')
+  })
+}
+const create=()=>{
+  post('/questionnaires/create', {
+    title:format.title,
+    description:format.description,
+  }, (message) => {
+    const result=JSON.parse(JSON.stringify(message));
+    format.id=result.questionnaireId;
+    ElMessage.success('创建问卷成功');
+    console.log(format.id);
+    router.push('/index/show');
+
+  })
+}
 
 </script>
 
 <template>
-<el-button type="danger" plain>你好吗</el-button>
+  <div>
+    <el-button type="success" style="margin-top: 50px" @click="router.push('/index/show')">创建问卷</el-button>
+  </div>
+
+  <div>
+    <el-form-item prop="">
+      <el-input v-model="format.title" :maxlength="20" type="text" placeholder="标题">
+        <template #prefix>
+          <el-icon><Memo /></el-icon>
+        </template>
+      </el-input>
+    </el-form-item>
+
+    <el-form-item prop="">
+      <el-input v-model="format.description" type="text" placeholder="描述" style="margin-top: 10px">
+        <template #prefix>
+          <el-icon><Document /></el-icon>
+        </template>
+
+      </el-input>
+    </el-form-item>
+
+    <el-button @click="create()"  style="margin-top: 10px"  type="info">确认</el-button>
+    <el-button @click="" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
+  </div>
+
+  <div>
+    <el-button style="margin-top: 400px" @click="logout()" type="danger" plain>退出登录</el-button>
+  </div>
 </template>
 
 <style scoped>

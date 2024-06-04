@@ -6,20 +6,10 @@ import lombok.Data;
 @Data
 public class MultipleChoiceQuestion extends ChoiceQuestion {
 
-    // 初始化多选题
-    MultipleChoiceQuestion() {
-        setCategory(Categories.SINGLE_CHOICE_QUESTION); // 设置类型为多选
-        setState(false); // 问题未填写
+    public  MultipleChoiceQuestion(){
+        super();
+        this.setCategory(Categories.MULTIPLE_CHOICE_QUESTION);
+        this.setMinSelected(1);
+        this.setMaxSelected(Integer.MAX_VALUE);
     }
-
-
-
-    // 转换为单选题 改变 minSelected, maxSelected, category 即可
-    void transformToSingleChoice() {
-        // to do
-
-
-
-    }
-
 }

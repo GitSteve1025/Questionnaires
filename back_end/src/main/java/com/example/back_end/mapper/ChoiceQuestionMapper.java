@@ -25,6 +25,6 @@ public interface ChoiceQuestionMapper {
     Integer updateChoiceQuestion(ChoiceQuestion choiceQuestion);
 
     // 删除限制信息
-    @Delete("delete from choicequestion where questionId = #{questionId}")
-    Integer deleteChoiceQuestion(ChoiceQuestion choiceQuestion);
+    @Delete("delete from choicequestion where questionId = #{choiceQuestionId}")
+    Integer deleteChoiceQuestion(int choiceQuestionId);
 }
