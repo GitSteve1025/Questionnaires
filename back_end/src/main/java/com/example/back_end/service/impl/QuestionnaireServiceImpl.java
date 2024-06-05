@@ -1,6 +1,8 @@
 package com.example.back_end.service.impl;
 
+import com.example.back_end.entity.Question.BlankQuestion.Blank;
 import com.example.back_end.entity.Question.BlankQuestion.BlankQuestion;
+import com.example.back_end.entity.Question.BlankQuestion.Type;
 import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
 import com.example.back_end.entity.Questionnaire.Questionnaire;
 import com.example.back_end.entity.RestBean;
@@ -10,8 +12,10 @@ import com.example.back_end.mapper.QuestionnaireMapper;
 import com.example.back_end.service.QuestionnaireService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class QuestionnaireServiceImpl implements QuestionnaireService {
@@ -97,9 +101,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
+    @Validated
     public String checkQuestionnaire(Questionnaire questionnaire) {
         for (ChoiceQuestion choiceQuestion : questionnaire.getChoiceQuestions()) {
-            if (choiceQuestion.getNecessary()) {
+            if (choiceQuestion.getNecessary() || choiceQuestion.getState()) {
                 if (choiceQuestion.getSelectedCount() < choiceQuestion.getMinSelected()
                         || choiceQuestion.getSelectedCount() > choiceQuestion.getMaxSelected()) {
                     return "问题 " + choiceQuestion.getSequenceId() + " 填写格式错误";
@@ -108,16 +113,18 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         }
 
         for (BlankQuestion blankQuestion : questionnaire.getBlankQuestions()) {
-            if (blankQuestion.getNecessary()) {
-                // to do
-//                if (blankQuestion.getValidation()) {
-//
-//                }
-//                Blank blank = blankQuestion.getBlank();
-//                if (blank.getContent().length() < blank.getMinCount()
-//                        || blank.getContent().length() > blank.getMaxCount()) {
-//                    return "问题 " + blankQuestion.getSequenceId() + " 填写格式错误";
-//                }
+            if (blankQuestion.getNecessary() || blankQuestion.getState()) {
+                Blank blank = blankQuestion.getBlank();
+                if (blank.getContent().length() < blank.getMinCount()  // 字数验证
+                        || blank.getContent().length() > blank.getMaxCount()) {
+                    return "问题 " + blankQuestion.getSequenceId() + " 填写格式错误";
+                }
+
+                if (blankQuestion.getValidation() && blankQuestion.getType() != Type.NULL) { // 数据类型验证
+                    if (!Pattern.matches(blankQuestion.getType().toString(), blank.getContent())) {
+                        return "问题 " + blankQuestion.getSequenceId() + " 填写格式错误";
+                    }
+                }
             }
         }
         return null;
