@@ -37,9 +37,9 @@ const create=()=>{
     title:format.title,
     description:format.description,
   },(message)=>{
-    ElMessage.success('问卷创建成功');
-    format.id =message.Questionnaire.questionnaireId;
-    provide('formatId', format.id);//传出id值
+    ElMessage.success('问卷创建成功')
+    var mes=JSON.parse(JSON.stringify(message));
+    format.id =mes.Questionnaire.questionnaireId;
     router.push('/index/show') //创建成功则进行跳转
   })
 }
