@@ -3,7 +3,7 @@ import {get} from "@/net";
 import {ElMessage} from "element-plus";
 import router from "@/router";
 import {useStore} from "@/stores";
-import {reactive} from 'vue'
+import {reactive,provide} from 'vue'
 import {post} from "@/net"
 import {Document, Memo} from "@element-plus/icons-vue";
 
@@ -20,6 +20,7 @@ const format =reactive({
       required:false,message:'请输入描述：',
     }
   ],
+  id:'',//初始值为空
 })
 
 
@@ -31,6 +32,18 @@ const logout = () => {
   })
 }
 
+const create=()=>{
+  post('/questionnaires/create', {
+    title:format.title,
+    description:format.description,
+  },(message)=>{
+    ElMessage.success('问卷创建成功');
+    format.id =message.Questionnaire.questionnaireId;
+    provide('formatId', format.id);//传出id值
+    router.push('/index/show') //创建成功则进行跳转
+  })
+}
+
 </script>
 
 <template>
@@ -38,9 +51,9 @@ const logout = () => {
     <el-button type="success" style="margin-top: 50px" @click="router.push('/index/show')">创建问卷</el-button>
   </div>
 
-  <div>
+  <div style="margin-top: 20px">
     <el-form-item prop="">
-      <el-input v-model="format.title" :maxlength="20" type="text" placeholder="标题">
+      <el-input v-model="format.title" :maxlength="20" type="text" placeholder="请输入标题">
         <template #prefix>
           <el-icon><Memo /></el-icon>
         </template>
