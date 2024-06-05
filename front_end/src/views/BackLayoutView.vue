@@ -1,85 +1,54 @@
+<!--1、要确保 response.data 是一个 RestBean 对象，其中包含一个 questionnaires 属性，你需要确保从后端返回的数据格式与前端代码中预期的格式一致。-->
+<!--2、因为没有登录，所以没有访问资源的权限的问题-->
 <script setup>
 import {Search} from "@element-plus/icons-vue";
 import {ref} from 'vue';
 import axios from 'axios';
-import {get} from "@/net/index.js";
-import router from "@/router/index.js"; // 确保已经安装并导入Axios
+import {onMounted } from 'vue';
 
+
+const questionnaires = ref([]);// 创建一个响应式的问卷列表
 const keyword = ref(''); // 使用 ref 创建响应式数据
 const currentPage=ref(1);//当前页码
 const pageSize=ref(10);//每页显示的条数
 const selectedRows=ref([]);//选中的行
 
-// 表格对应的测试Data
-const data=ref({
-  arr:[
-{questionnaireId:'a1',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a2',title:'大学生就业意向调查2',description:'调查2'},
-{questionnaireId:'a3',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a4',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a5',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a6',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a7',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a8',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a9',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a10',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a11',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a12',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a13',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a14',title:'大学生就业意向调查',description:'调查'},
-{questionnaireId:'a15',title:'大学生就业意向调查',description:'调查'}
-  ]// 用于存储从后端获取的问卷信息
-})
-//用于测试的问卷信息
 
-
-// 从后端获取所有问卷信息
+// 在组件挂载时或者需要时调用fetchQuestionnaires方法
+onMounted(() => {
+  fetchAllQuestionnaires();
+});
 const fetchAllQuestionnaires = async () => {
-
   try {
+    console.log('Sending request to server...'); // 添加请求前的日志
     const response = await axios.get('/questionnaires/display-all-questionnaires');
-    data.value = response.data; // 将返回的问卷数组赋值给data数组
-    console.log(response.data);
-  } catch (error) {
+    console.log('Response received:', response); // 添加响应后的日志
+    questionnaires.value= response.data.questionnaires;
+    console.log('Data assigned:', response.data); // 添加数据赋值后的日志
+    } catch (error) {
     console.error('Failed to fetch all questionnaires:', error);
   }
 };
 
+
 // 分页事件处理函数
 const handleCurrentChange = async (newPage) => {
+
   currentPage.value = newPage;
   // 调用API获取所有问卷数据
-  await fetchAllQuestionnaires();
+  //await fetchAllQuestionnaires();
 };
 
 
 // 删除事件处理函数,执行批量删除操作
 const dels = () => {
-  // 可以根据selectedRows.value中的id来删除数据
-  const questionnaireIds = selectedRows.value.map(row => row.questionnaireId);
-  deleteQuestionnaires(questionnaireIds);
+
 };
 // 删除一行数据
 const del = (questionnaireId) => {
-  const index = data.value.findIndex(row => row.questionnaireId === questionnaireId);
-  if (index !== -1) {
-    data.value.splice(index, 1);
-  }
-  // 调用API删除问卷
-  deleteQuestionnaires([questionnaireId]);
+
 };
-// 删除问卷API调用
-const deleteQuestionnaires = async (questionnaireIds) => {
-  try {
-    const response = await axios.post('/questionnaires/delete-questionnaire', { questionnaireIds });
-    if (response.data.success) {
-      // 成功删除后更新表格数据
-      data.value = data.value.filter(row => !questionnaireIds.includes(row.questionnaireId));
-    }
-  } catch (error) {
-    console.error('Failed to delete questionnaires:', error);
-  }
-};
+
 // 编辑事件处理函数
 const edit = (index, row) => {
   // 执行编辑操作
@@ -123,19 +92,12 @@ const goToAnswerPage = (questionnaireId) => {
           </el-row>
         </div>
         <!--表格组件-->
-        <el-table :data="data.arr.slice((currentPage-1)*pageSize,currentPage*pageSize)" @selection-change="selected" border style="top:110px ;left:40px">
+        <el-table :data="questionnaires" @selection-change="selected" border style="top:110px ;left:40px">
           <el-table-column type="selection" width="55"/>
 
 <!--          <el-table-column prop="id" label="编号" width="60" />-->
 
-          <el-table-column prop="questionnaireId" label="问卷ID" width="100">
-            <!--           问卷ID设置为链接形式，点击问卷ID后跳转到显示该问卷的问题的页面，并在该页面添加“显示回答的问卷内容信息”按钮-->
-            <template #default="{ row }">
-              <!-- 设置点击问卷ID时的跳转逻辑 -->
-              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)">{{ row.questionnaireId}}</el-link>
-            </template>
-          </el-table-column>
-
+          <el-table-column prop="questionnaireId" label="问卷ID" width="100"/>
           <el-table-column prop="title" label="问卷标题" width="160" />
           <el-table-column prop="description" label="问卷描述" width="130" />
           <el-table-column prop="state" label="问卷状态" width="100" />
