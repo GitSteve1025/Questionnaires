@@ -15,7 +15,7 @@ public interface ChoiceQuestionMapper {
             "(questionId, minSelected, maxSelected) " +
             "values " +
             "(#{questionId}, #{minSelected}, #{maxSelected})")
-    Integer insertChoiceQuestion(ChoiceQuestion choiceQuestion);
+    Integer createChoiceQuestion(ChoiceQuestion choiceQuestion);
 
     // 修改选择题的限制信息
     @Update("update choicequestion set " +
@@ -25,6 +25,6 @@ public interface ChoiceQuestionMapper {
     Integer updateChoiceQuestion(ChoiceQuestion choiceQuestion);
 
     // 删除限制信息
-    @Delete("delete from choicequestion where questionId = #{questionId}")
-    Integer deleteChoiceQuestion(ChoiceQuestion choiceQuestion);
+    @Delete("delete from choicequestion where questionId = #{choiceQuestionId}")
+    Integer deleteChoiceQuestion(int choiceQuestionId);
 }

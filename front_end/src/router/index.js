@@ -30,15 +30,100 @@ const router = createRouter({
       path:'/index',
       name:'index',
       component:()=>import('@/views/IndexView.vue'),
-      children:[{
+      children:[
+          {
         path:'mypage',
         name:'index-mypage',
         component:()=>import('@/components/Index/Mypage.vue')
-      }]
+      },
+        {
+          path:'homepage',
+          name:'index-homepage',
+          component:()=>import('@/components/Index/Homepage.vue')
+        },
+        {
+          path:'choicepage',
+          name:'index-choicepage',
+          component:()=>import('@/components/Index/Choicepage.vue')
+        },
+        {
+          path:'singlechoice',
+          name:'index-singlechoice',
+          component:()=>import('@/components/Index/Singlechoice.vue')
+        },
+        {
+          path:'multiplechoice',
+          name:'index-multiplechoice',
+          component:()=>import('@/components/Index/MultipleChoice.vue')
+        },
+        {
+          path:'blankchoice',
+          name:'index-blankchoice',
+          component:()=>import('@/components/Index/Blankchoice.vue')
+        },
+        {
+          path:'show',
+          name:'index-show',
+          component:()=>import('@/components/Index/Show.vue')
+        },
+        {
+          path:'showallquestion',
+          name:'index-showallquestion',
+          component:()=>import('@/components/Index/ShowAllQuestion.vue')
+        }
+      ]
+    }
+    ,{
+       path:'/backlayout',
+      name :'backlayout',
+      component:()=>import('@/views/BackLayoutView.vue'),
+      children:[//子路由
+        {
+          path:'InfoManage',
+          name:'backlayout-InfoManage',
+          component: ()=>import('@/components/BackLayout/InfoManage.vue'),
+          children:[//子子路由
+            {
+              path:'QuestionnaireInfo',
+              name:'InfoManage-QuestionnaireInfo',
+              component:()=>import('@/components/BackLayout/QuestionnaireInfo.vue'),
+            },
+            {
+              path:'QuestionInfo/:id',
+              name:'InfoManage-QuestionInfo',
+              component:()=>import('@/components/BackLayout/QuestionInfo.vue'),
+            },
+            {
+              path:'AnswerInfo',
+              name:'InfoManage-AnswerInfo',
+              component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
+            }
+          ]
+        },
+        {
+          path:'UserManage',
+          name:'backlayout-UserManage',
+          component:( )=>import('@/components/BackLayout/UserManage.vue'),
+          children:[
+            {
+              path:'ManagerInfo',
+              name:'UserManage-ManagerInfo',
+              component:()=>('@/components/BackLayout/ManagerInfo.vue'),
+            },
+            {
+              path:'UserInfo',
+              name:'UserManage-UserInfo',
+              component:()=>import('@/components/BackLayout/UserInfo.vue'),
+            }
+          ]
+        }
+      ]
     }
   ]
 })
+
 //基本页面跳转拦截
+
 // router.beforeEach((to, from, next) => {
 //   const store = useStore()
 //   if(store.auth.user != null && to.name.startsWith('Welcome-')) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    {{store.auth.user.username}}-->
+    <!--    {{store.auth.user.username}}-->
   </div>
 
   <el-menu
@@ -39,40 +39,40 @@
 
         </el-menu>
       </el-header>
-    <div>
-      <el-main style="margin-top: 20px">
-        <el-row>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生就业意向调查</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生兼职情况调查</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生网购调查问卷</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card>
-              <h3>大学生恋爱观调查</h3>
-              <p>预览</p>
-              <el-button>使用该模板</el-button>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
-    </div>
+      <div>
+        <el-main style="margin-top: 20px">
+          <el-row>
+            <el-col :span="6">
+              <el-card>
+                <h3>大学生就业意向调查</h3>
+                <p>预览</p>
+                <el-button>使用该模板</el-button>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card>
+                <h3>大学生兼职情况调查</h3>
+                <p>预览</p>
+                <el-button>使用该模板</el-button>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card>
+                <h3>大学生网购调查问卷</h3>
+                <p>预览</p>
+                <el-button>使用该模板</el-button>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card>
+                <h3>大学生恋爱观调查</h3>
+                <p>预览</p>
+                <el-button>使用该模板</el-button>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-main>
+      </div>
 
     </el-container>
   </div>
@@ -81,34 +81,42 @@
   <div>
     <el-button @click="logout()" type="danger" plain>退出登录</el-button>
   </div>
+
+  <div>
+    <el-button @click="goToAdminMode" type="primary">进入管理员模式</el-button>
+  </div>
 </template>
 
 
 <script lang="ts" setup>
-  import {get} from "@/net";
-  import {ElMessage} from "element-plus";
-  import router from "@/router";
-  import {useStore} from "@/stores";
-  import { ref } from 'vue'
+import {get} from "@/net";
+import {ElMessage} from "element-plus";
+import router from "@/router";
+import {useStore} from "@/stores";
+import { ref } from 'vue'
 
-  const activeIndex = ref('1')
-  const activeIndex2 = ref('1')
+const activeIndex = ref('1')
+const activeIndex2 = ref('1')
 
-  const store=useStore()
+const store=useStore();
 
-  const mypage=()=>{
-    get('',(message)=>{
-      router.push('')
-    })
-  }
+const mypage=()=>{
+  get('',(message)=>{
+    router.push('')
+  })
+}
 
-  const logout = () => {
-    get('/api/auth/logout', (message) => {
-      ElMessage.success(message)
-      store.auth.user=null
-      router.push('/')
-    })
-  }
+const logout = () => {
+  get('/api/auth/logout', (message) => {
+    ElMessage.success(message)
+    store.auth.user=null
+    router.push('/')
+  })
+}
+
+const goToAdminMode = () => {
+  router.push({ name: 'backlayout' }); // 假设backLayout是您定义的路由名称
+};
 </script>
 
 

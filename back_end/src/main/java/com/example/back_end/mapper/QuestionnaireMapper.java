@@ -16,6 +16,10 @@ public interface QuestionnaireMapper {
     @Select("select * from questionnaire where questionnaireId = #{questionnaireId}")
     Questionnaire getQuestionnaire(int questionnaireId);
 
+    // 获取问卷所有者的 ID
+    @Select("select userId from questionnaire where questionnaireId = #{questionnaireId}")
+    Integer getUserIdOfQuestionnaire(int questionnaireId);
+
     // 加入问卷
     @Insert("insert into questionnaire " +
             "(userId, title, description, state, createdTime, startTime, endTime) " +
@@ -38,5 +42,5 @@ public interface QuestionnaireMapper {
 
     // 删除该问卷
     @Delete("delete from questionnaire where questionnaireId = #{questionnaireId}")
-    Integer deleteQuestionnaire(Questionnaire questionnaire);
+    Integer deleteQuestionnaire(int questionnaireId);
 }

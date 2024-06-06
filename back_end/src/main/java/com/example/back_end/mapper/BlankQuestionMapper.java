@@ -15,7 +15,7 @@ public interface BlankQuestionMapper {
             "(questionId, validation, type) " +
             "values " +
             "(#{questionId}, #{validation}, #{type})")
-    Integer insertBlankQuestion(BlankQuestion blankQuestion);
+    Integer createBlankQuestion(BlankQuestion blankQuestion);
 
     // 修改填空限制信息
     @Update("update blankquestion set " +
@@ -25,6 +25,6 @@ public interface BlankQuestionMapper {
     Integer updateBlankQuestion(BlankQuestion blankQuestion);
 
     // 删除填空限制信息
-    @Delete("delete from blankquestion where questionId = #{questionId}")
-    Integer deleteBlankQuestion(BlankQuestion blankQuestion);
+    @Delete("delete from blankquestion where questionId = #{blankQuestionId}")
+    Integer deleteBlankQuestion(int blankQuestionId);
 }

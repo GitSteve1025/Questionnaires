@@ -11,6 +11,12 @@ public interface QuestionMapper {
     // 读出某个问卷的所有问题
     @Select("select * from question where questionnaireId = #{questionnaireId}")
     List<Question> getQuestions(Questionnaire questionnaire);
+    // 读出某个问题
+    @Select("select * from question where questionId = #{questionId}")
+    Question getQuestion(int questionId);
+    // 获取该问题的问卷的 ID
+    @Select("select questionnaireId from question where questionId = #{questionId}")
+    Integer getQuestionnaireIdOfQuestion(int questionId);
 
     // 添加问题
     @Insert("insert into question " +
@@ -31,5 +37,5 @@ public interface QuestionMapper {
 
     // 删除问题
     @Delete("delete from question where questionId = #{questionId}")
-    Integer deleteQuestion(Question question);
+    Integer deleteQuestion(int questionId);
 }

@@ -10,13 +10,11 @@ import java.util.List;
 @Mapper
 public interface QuestionnaireInfoMapper {
     // 获取填写该问卷的所有用户 ID
-    @Select("select * from questionnaire_info where questionnaireId = #{questionnaireId}")
-    @Result(column = "userId")
+    @Select("select userId from questionnaire_info where questionnaireId = #{questionnaireId}")
     List<Integer> getAccountsOfQuestionnaire(Questionnaire questionnaire);
 
     // 获取该用户填写的所有问卷 ID
-    @Select("select * from questionnaire_info where userId = #{id}")
-    @Result(column = "questionnaireId")
+    @Select("select questionnaireId from questionnaire_info where userId = #{id}")
     List<Integer> getQuestionnairesOfAccount(Account account);
 
     // 添加填写信息

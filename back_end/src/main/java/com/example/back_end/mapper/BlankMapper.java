@@ -8,7 +8,15 @@ import org.apache.ibatis.annotations.*;
 public interface BlankMapper {
     // 获取 Blank
     @Select("select * from blank where questionId = #{questionId}")
-    Blank getBlank(Question question);
+    Blank getBlankByQuestionId(int questionId);
+
+    // 获取 Blank
+    @Select("select * from blank where blankId = #{blankId}")
+    Blank getBlank(int blankId);
+
+    // 获取 blank 对应的 questionId
+    @Select("select questionId from blank where blankId = #{blankId}")
+    Integer getQuestionIdOfBlank(int blankId);
 
     // 添加 Blank
     @Insert("insert into blank " +
@@ -27,5 +35,5 @@ public interface BlankMapper {
 
     // 删除 Blank
     @Delete("delete from blank where blankId = #{blankId}")
-    Integer deleteBlank(Blank blank);
+    Integer deleteBlank(int blankId);
 }

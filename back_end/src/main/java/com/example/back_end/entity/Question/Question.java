@@ -17,5 +17,8 @@ public class Question {
     // 问题填写状态
     private Boolean state;
 
-
+    public Question () {
+        necessary = Boolean.TRUE;
+        state = Boolean.FALSE;
+    }
 }
