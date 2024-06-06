@@ -2,43 +2,71 @@
 <!--2、因为没有登录，所以没有访问资源的权限的问题-->
 <script setup>
 import {Search} from "@element-plus/icons-vue";
-import {ref} from 'vue';
-import axios from 'axios';
+import {ref,reactive} from 'vue';
 import {onMounted } from 'vue';
+import {get} from "@/net";
+import {ElMessage} from "element-plus";
 
-
-const questionnaires = ref([]);// 创建一个响应式的问卷列表
+const questionnaires = reactive([]);// 创建一个响应式的问卷列表
 const keyword = ref(''); // 使用 ref 创建响应式数据
 const currentPage=ref(1);//当前页码
 const pageSize=ref(10);//每页显示的条数
 const selectedRows=ref([]);//选中的行
 
-
-// 在组件挂载时或者需要时调用fetchQuestionnaires方法
+// 在组件挂载时或者需要时调用showData方法
 onMounted(() => {
-  fetchAllQuestionnaires();
+  showData();
 });
-const fetchAllQuestionnaires = async () => {
-  try {
-    console.log('Sending request to server...'); // 添加请求前的日志
-    const response = await axios.get('/questionnaires/display-all-questionnaires');
-    console.log('Response received:', response); // 添加响应后的日志
-    questionnaires.value= response.data.questionnaires;
-    console.log('Data assigned:', response.data.questionnaires); // 添加数据赋值后的日志
-    } catch (error) {
-    console.error('Failed to fetch all questionnaires:', error);
-  }
-};
+
+const format = ({
+  questionnaireId: '',
+  title: '',
+  description: '',
+  state: '',
+  createdTime: '',
+  startTime: '',
+  endTime: '',
+})
+
+const transform = (time)=>{
+  return Date(time).toString({
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
+
+const showData=()=>{
+  get('/questionnaires/display-all', (message) => {
+    for (let temp of message) {
+      // const newFormat = format
+      // newFormat.questionnaireId = temp.questionnaireId
+      // newFormat.title = temp.title
+      // newFormat.description = temp.description
+      // newFormat.state = temp.state
+      // newFormat.createdTime = transform(temp.createdTime)
+      // if (temp.startTime !== '') {
+      //   newFormat.startTime = transform(temp.startTime)
+      // }
+      // if (temp.endTime !== '') {
+      //   newFormat.endTime = transform(temp.endTime)
+      // }
+      // console.log(JSON.stringify(temp.createdTime))
+      questionnaires.push(temp)
+    }
+  })
+}
+
+
 
 
 // 分页事件处理函数
 const handleCurrentChange = async (newPage) => {
-
   currentPage.value = newPage;
-  // 调用API获取所有问卷数据
-  //await fetchAllQuestionnaires();
 };
-
 
 // 删除事件处理函数,执行批量删除操作
 const dels = () => {
@@ -72,7 +100,9 @@ const goToAnswerPage = (questionnaireId) => {
 </script>
 
 <template>
-
+  <div>
+    <p>{{ formattedTime }}</p>
+  </div>
   <div class="container">
     <header>
       <h1>问卷后台管理</h1>
@@ -95,9 +125,13 @@ const goToAnswerPage = (questionnaireId) => {
         <el-table :data="questionnaires" @selection-change="selected" border style="top:110px ;left:40px">
           <el-table-column type="selection" width="55"/>
 
-<!--          <el-table-column prop="id" label="编号" width="60" />-->
-
-          <el-table-column prop="questionnaireId" label="问卷ID" width="100"/>
+          <el-table-column prop="questionnaireId" label="问卷ID" width="100">
+            <!--           问卷ID设置为链接形式，点击问卷ID后跳转到显示该问卷的问题的页面，并在该页面添加“显示回答的问卷内容信息”按钮-->
+            <template #default="{ row }">
+              <!-- 设置点击问卷ID时的跳转逻辑 -->
+              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)">{{ row.questionnaireId}}</el-link>
+            </template>
+          </el-table-column>
           <el-table-column prop="title" label="问卷标题" width="160" />
           <el-table-column prop="description" label="问卷描述" width="130" />
           <el-table-column prop="state" label="问卷状态" width="100" />
