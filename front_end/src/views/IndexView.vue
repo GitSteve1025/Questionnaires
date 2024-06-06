@@ -10,7 +10,6 @@
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b"
-      @select="handleSelect"
       style="margin-top: 20px;height: 8vh"
   >
     <div class="welcome-title"  style="margin-left:10px;margin-top:10px;font-size: 40px;font-weight:bold;display:flex ">问卷星系统</div>

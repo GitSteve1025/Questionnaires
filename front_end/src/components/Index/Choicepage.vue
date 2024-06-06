@@ -2,15 +2,31 @@
 import router from "@/router/index.js";
 import {post} from "@/net/index.js";
 import {ElMessage} from "element-plus";
+import {useRoute} from "vue-router";
 
 
+const route=useRoute()
+const id=route.query.params;
 
 const Gosingle=()=>{
-  router.push('/index/singlechoice')
+  console.log(id)
+  router.push({
+    path:'/index/singlechoice',
+    query: {
+      params: id
+    }
+  })
 }
+
 const Gomultiple=()=>{
-  router.push('/index/multiplechoice')
+  router.push({
+    path:'/index/singlechoice',
+    query: {
+      params: JSON.stringify(format.id)
+    }
+  })
 }
+
 const Goblank=()=>{
   router.push('/index/blankchoice')
 }
