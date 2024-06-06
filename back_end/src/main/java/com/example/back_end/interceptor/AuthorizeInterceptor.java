@@ -7,23 +7,32 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+
 import org.springframework.web.servlet.HandlerInterceptor;
 
+//À¹½ØÆ÷
 @Component
-public class AuthorizeInterceptor implements HandlerInterceptor {//æ‹¦æˆªå™¨
+public class AuthorizeInterceptor implements HandlerInterceptor {
     @Resource
     UserMapper mapper;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        String username = user.getUsername();
-        AccountUser account = mapper.findAccountUserByNameOrEmail(username);
-        request.getSession().setAttribute("account",account);
+        Authentication authentication = context.getAuthentication();//´Ócontext»ñÈ¡µ±Ç°ÒÑ¾­ÑéÖ¤µÄÓÃ»§
+       // System.out.println(authentication.getPrincipal());
+        User user = (User)authentication.getPrincipal();//½«µÃµ½µÄÒÑÑéÖ¤µÄÓÃ»§ÐÅÏ¢×ª»»ÎªUserÀàÐÍ
+        String username =user.getUsername();
+        AccountUser account = mapper.findAccountUserByNameOrEmail(username);//×ª»»³ÉAccountUser
+        request.getSession().setAttribute("account",account);//½«accountÓë¼ü¡°account¡±¹ØÁªÆðÀ´
         return true;
-    }
 }
+}
+
+
+
+
