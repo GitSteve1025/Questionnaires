@@ -17,7 +17,7 @@
     <el-menu-item index="1" style="margin-left: 30px">首页</el-menu-item>
     <el-sub-menu index="2">
       <template #title>我的问卷</template>
-      <el-menu-item index="2-1" @click="router.push('/mypage')">创建问卷</el-menu-item>
+      <el-menu-item index="2-1" @click="goToCreate" type="primary">创建问卷</el-menu-item>
       <el-menu-item index="2-2">查看问卷</el-menu-item>
       <el-menu-item index="2-3">item three</el-menu-item>
       <el-sub-menu index="2-4">
@@ -41,6 +41,8 @@
       </el-header>
       <div>
         <el-main style="margin-top: 20px">
+         <router-view>
+         </router-view>
           <el-row>
             <el-col :span="6">
               <el-card>
@@ -116,6 +118,10 @@ const logout = () => {
 
 const goToAdminMode = () => {
   router.push({ name: 'backlayout' }); // 假设backLayout是您定义的路由名称
+};
+
+const goToCreate=()=>{
+  router.push('/index/mypage');
 };
 </script>
 
