@@ -24,7 +24,7 @@ const fetchAllQuestionnaires = async () => {
     const response = await axios.get('/questionnaires/display-all-questionnaires');
     console.log('Response received:', response); // 添加响应后的日志
     questionnaires.value= response.data.questionnaires;
-    console.log('Data assigned:', response.data); // 添加数据赋值后的日志
+    console.log('Data assigned:', response.data.questionnaires); // 添加数据赋值后的日志
     } catch (error) {
     console.error('Failed to fetch all questionnaires:', error);
   }

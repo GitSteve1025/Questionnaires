@@ -34,6 +34,7 @@ const options = reactive([]);
 const Newoption = () => {
   options.push({ value: '' ,isDeleted:false});
 }
+
 const removeOption=(index)=>{
   options.splice(index,1);
 }

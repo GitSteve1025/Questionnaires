@@ -38,9 +38,13 @@ const create=()=>{
     description:format.description,
   },(message)=>{
     ElMessage.success('问卷创建成功')
-    var mes=JSON.parse(JSON.stringify(message));
-    format.id =mes.Questionnaire.questionnaireId;
-    router.push('/index/show') //创建成功则进行跳转
+    format.id = JSON.parse(JSON.stringify(message)).questionnaireId;
+    router.push({
+      path: '/index/choicepage',
+      query: {
+        params: JSON.stringify(format.id)
+      }
+    }) //创建成功则进行跳转
   })
 }
 
