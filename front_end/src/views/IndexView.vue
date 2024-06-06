@@ -36,6 +36,7 @@
         <el-menu mode="horizontal" style="margin-top: 10px">
         </el-menu>
       </el-header>
+
     <div>
       <router-view> </router-view>
     </div>
