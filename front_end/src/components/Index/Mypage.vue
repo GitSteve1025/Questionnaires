@@ -9,17 +9,8 @@ import {Document, Memo} from "@element-plus/icons-vue";
 
 
 const format =reactive({
-  title:[
-    {
-      required:true,message:'请输入标题',
-      min:1
-    }
-  ],
-  description:[
-    {
-      required:false,message:'请输入描述：',
-    }
-  ],
+  title:'',
+  description:'',
   id:'',//初始值为空
 })
 
@@ -51,13 +42,12 @@ const create=()=>{
 </script>
 
 <template>
-  <div>
-    <el-button type="success" style="margin-top: 50px" @click="router.push('/index/show')">创建问卷</el-button>
-  </div>
+
+
 
   <div style="margin-top: 20px">
     <el-form-item prop="">
-      <el-input v-model="format.title" :maxlength="20" type="text" placeholder="请输入标题">
+      <el-input v-model="format.title" :maxlength="20" type="text" placeholder="请输入标题" style="margin-top: 100px">
         <template #prefix>
           <el-icon><Memo /></el-icon>
         </template>
@@ -73,13 +63,10 @@ const create=()=>{
       </el-input>
     </el-form-item>
 
-    <el-button @click="create()"  style="margin-top: 10px"  type="info">确认</el-button>
+    <el-button @click="create()"  style="margin-top: 10px"  type="success">确认</el-button>
     <el-button @click="" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
   </div>
 
-  <div>
-    <el-button style="margin-top: 400px" @click="logout()" type="danger" plain>退出登录</el-button>
-  </div>
 </template>
 
 <style scoped>

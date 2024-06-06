@@ -62,13 +62,8 @@ const router = createRouter({
           component:()=>import('@/components/Index/Blankchoice.vue')
         },
         {
-          path:'show',
-          name:'index-show',
-          component:()=>import('@/components/Index/Show.vue')
-        },
-        {
-          path:'showallquestion',
-          name:'index-showallquestion',
+          path:'ShowAllQuestion',
+          name:'index-ShowAllQuestion',
           component:()=>import('@/components/Index/ShowAllQuestion.vue')
         }
       ]

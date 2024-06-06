@@ -50,7 +50,7 @@ public class QuestionController {
 
     // 添加单选题
     @PostMapping("/create-SingleChoiceQuestion")
-    public RestBean<SingleChoiceQuestion> createSingleChoiceQuestion(@RequestBody Integer questionnaireId,
+    public RestBean<SingleChoiceQuestion> createSingleChoiceQuestion(@RequestParam("questionnaireId") Integer questionnaireId,
                                                          @Length(min = 1) @RequestParam("title") String title,
                                                          @RequestParam(value = "necessary", defaultValue = "true") Boolean necessary,
                                                          @Size(min = 2) @RequestParam("content") List<String> content) {
@@ -88,7 +88,7 @@ public class QuestionController {
 
     // 添加多选题
     @PostMapping("/create-MultipleChoiceQuestion")
-    public RestBean<MultipleChoiceQuestion> createMultipleChoiceQuestion(@RequestBody Integer questionnaireId,
+    public RestBean<MultipleChoiceQuestion> createMultipleChoiceQuestion(@RequestParam("questionnaireId") Integer questionnaireId,
                                                                          @Length(min = 1) @RequestParam("title") String title,
                                                                          @RequestParam(value = "necessary", defaultValue = "true") Boolean necessary,
                                                                          @Size(min = 2) @RequestParam("content") List<String> content,
@@ -130,7 +130,7 @@ public class QuestionController {
 
     // 添加填空题
     @PostMapping("/create-BlankQuestion")
-    public RestBean<BlankQuestion> createBlankQuestion(@RequestBody Integer questionnaireId,
+    public RestBean<BlankQuestion> createBlankQuestion(@RequestParam("questionnaireId") Integer questionnaireId,
                                                        @Length(min = 1) @RequestParam("title") String title,
                                                        @RequestParam(value = "necessary", defaultValue = "true") Boolean necessary,
                                                        @RequestParam(value = "validation", defaultValue = "false") Boolean validation,
@@ -160,7 +160,7 @@ public class QuestionController {
 
     // 删除问题
     @PostMapping("/delete")
-    public RestBean<String> deleteQuestion(@RequestBody Integer questionId) {
+    public RestBean<String> deleteQuestion(@RequestParam("questionnaireId") Integer questionId) {
         Account account = authorizeService.currentAccount();
         Integer questionnaireId = questionService.getQuestionnaireIdOfQuestion(questionId);
         String s = questionService.deleteQuestion(account, questionId);
@@ -179,7 +179,7 @@ public class QuestionController {
 
     // 修改单选题
     @PostMapping("/update-SingleChoiceQuestion")
-    public RestBean<String> updateSingleChoiceQuestion(@RequestBody Integer questionId,
+    public RestBean<String> updateSingleChoiceQuestion(@RequestParam("questionnaireId") Integer questionId,
                                                        @Length(min = 1) @RequestParam("title") String title,
                                                        @RequestParam(value = "necessary", defaultValue = "true") Boolean necessary,
                                                        @Size(min = 2) @RequestParam("content") List<String> content) {
@@ -206,7 +206,7 @@ public class QuestionController {
 
     // 修改单选题
     @PostMapping("/update-MultipleChoiceQuestion")
-    public RestBean<String> updateMultipleChoiceQuestion(@RequestBody Integer questionId,
+    public RestBean<String> updateMultipleChoiceQuestion(@RequestParam("questionnaireId") Integer questionId,
                                                          @Length(min = 1) @RequestParam("title") String title,
                                                          @RequestParam(value = "necessary", defaultValue = "true") Boolean necessary,
                                                          @Size(min = 2) @RequestParam("content") List<String> content,
@@ -237,7 +237,7 @@ public class QuestionController {
 
     // 修改单选题
     @PostMapping("/update-BlankQuestion")
-    public RestBean<String> updateBlankQuestion(@RequestBody Integer questionId,
+    public RestBean<String> updateBlankQuestion(@RequestParam("questionnaireId") Integer questionId,
                                                 @Length(min = 1) @RequestParam("title") String title,
                                                 @RequestParam(value = "necessary", defaultValue = "true") Boolean necessary,
                                                 @RequestParam(value = "validation", defaultValue = "false") Boolean validation,

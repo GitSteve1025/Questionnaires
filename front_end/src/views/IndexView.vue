@@ -13,7 +13,7 @@
       style="margin-top: 20px;height: 8vh"
   >
     <div class="welcome-title"  style="margin-left:10px;margin-top:10px;font-size: 40px;font-weight:bold;display:flex ">问卷星系统</div>
-    <el-menu-item index="1" style="margin-left: 30px">首页</el-menu-item>
+    <el-menu-item index="1" style="margin-left: 30px" @click="Gohome">首页</el-menu-item>
     <el-sub-menu index="2">
       <template #title>我的问卷</template>
       <el-menu-item index="2-1" @click="goToCreate" type="primary">创建问卷</el-menu-item>
@@ -28,56 +28,22 @@
     </el-sub-menu>
     <el-menu-item index="3" disabled>客服中心</el-menu-item>
     <el-menu-item index="4">个人资料</el-menu-item>
+
+    <el-row class="demo-avatar demo-basic" style="margin-left: 600px">
+      <el-col :span="12">
+        <div class="sub-title">photo</div>
+        <div class="demo-basic--circle">
+          <div >
+            <el-avatar shape="square"  :src="squareUrl" />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </el-menu>
 
   <div>
-    <el-container>
-      <el-header>
-        <el-menu mode="horizontal" style="margin-top: 10px">
-
-
-        </el-menu>
-      </el-header>
-      <div>
-        <el-main style="margin-top: 20px">
-         <router-view>
-         </router-view>
-          <el-row>
-            <el-col :span="6">
-              <el-card>
-                <h3>大学生就业意向调查</h3>
-                <p>预览</p>
-                <el-button>使用该模板</el-button>
-              </el-card>
-            </el-col>
-            <el-col :span="6">
-              <el-card>
-                <h3>大学生兼职情况调查</h3>
-                <p>预览</p>
-                <el-button>使用该模板</el-button>
-              </el-card>
-            </el-col>
-            <el-col :span="6">
-              <el-card>
-                <h3>大学生网购调查问卷</h3>
-                <p>预览</p>
-                <el-button>使用该模板</el-button>
-              </el-card>
-            </el-col>
-            <el-col :span="6">
-              <el-card>
-                <h3>大学生恋爱观调查</h3>
-                <p>预览</p>
-                <el-button>使用该模板</el-button>
-              </el-card>
-            </el-col>
-          </el-row>
-        </el-main>
-      </div>
-
-    </el-container>
+    <router-view></router-view>
   </div>
-
 
   <div>
     <el-button @click="logout()" type="danger" plain>退出登录</el-button>
@@ -94,12 +60,24 @@ import {get} from "@/net";
 import {ElMessage} from "element-plus";
 import router from "@/router";
 import {useStore} from "@/stores";
-import { ref } from 'vue'
+import { ref ,reactive,toRefs} from 'vue'
+
+const state = reactive({
+  squareUrl:
+      'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+  sizeList: ['small', '', 'large'] as const,
+})
+
+const { circleUrl, squareUrl, sizeList } = toRefs(state)
 
 const activeIndex = ref('1')
 const activeIndex2 = ref('1')
 
 const store=useStore();
+
+const Gohome=()=>{
+  router.push('/index/homepage')
+}
 
 const mypage=()=>{
   get('',(message)=>{

@@ -9,7 +9,6 @@ const route=useRoute()
 const id=route.query.params;
 
 const Gosingle=()=>{
-  console.log(id)
   router.push({
     path:'/index/singlechoice',
     query: {
@@ -20,35 +19,40 @@ const Gosingle=()=>{
 
 const Gomultiple=()=>{
   router.push({
-    path:'/index/singlechoice',
+    path:'/index/multiplechoice',
     query: {
-      params: JSON.stringify(format.id)
+      params: id
     }
   })
 }
 
 const Goblank=()=>{
-  router.push('/index/blankchoice')
+  router.push({
+    path: '/index/blankchoice',
+    query: {
+      params: id
+    }
+  })
 }
 
 </script>
 
 <template>
   <div style="margin-top: 40px">
-    <el-button style="margin-left: 30px" @click="Gosingle">
+    <el-button style="margin-left: 150px"  @click="Gosingle">
       单选题
     </el-button>
-    <el-button style="margin-left: 30px" @click="Gomultiple">
+    <el-button style="margin-left: 100px" @click="Gomultiple">
       多选题
     </el-button>
 
-    <el-button style="margin-left: 30px" @click="Goblank">
+    <el-button style="margin-left: 100px" @click="Goblank">
       填空题
     </el-button>
 
   </div>
 
-  <el-button style="margin-left: 100px;margin-top: 30px" @click="router.push('/index/show')">
+  <el-button style="margin-left: 330px;margin-top: 30px" @click="router.push('/index/mypage')">
     返回
   </el-button>
 
@@ -60,5 +64,7 @@ const Goblank=()=>{
 </template>
 
 <style scoped>
-
+button-container{
+  text-align:center;
+}
 </style>

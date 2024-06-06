@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 // @RequestParam 是前端必要参数
-// @RequestBody json 格式
+// @RequestParam("questionnaireId json 格式
 
 // 问卷接口
 @Validated
@@ -72,7 +72,7 @@ public class QuestionnaireController {
 
     // 删除问卷
     @PostMapping("/delete")
-    public RestBean<String> deleteQuestionnaire(@RequestBody Integer questionnaireId) {
+    public RestBean<String> deleteQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId) {
         Account account = authorizeService.currentAccount(); // 当前用户
         Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId); // 先找到该问卷
         if (questionnaire == null) {
@@ -98,7 +98,7 @@ public class QuestionnaireController {
 
     // 修改问卷的标题/描述
     @PostMapping("/update")
-    public RestBean<String> updateQuestionnaire(@RequestBody Integer questionnaireId, // 需要提供问卷ID
+    public RestBean<String> updateQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId, // 需要提供问卷ID
                                                 @Length(min = 1) @RequestParam("title") String title, // 标题不能为空
                                                 @RequestParam(value = "description", required = false) String description) {
         Account account = authorizeService.currentAccount(); // 当前用户
@@ -118,7 +118,7 @@ public class QuestionnaireController {
 
     // 查找问卷
     @GetMapping("/find")
-    public RestBean<Questionnaire> findQuestionnaire(@RequestBody Integer questionnaireId) {
+    public RestBean<Questionnaire> findQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId) {
         Account account = authorizeService.currentAccount();
         Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId);
         if (questionnaire == null) {
@@ -154,7 +154,7 @@ public class QuestionnaireController {
 
     // 发布问卷
     @PostMapping("/publish")
-    public RestBean<String> publishQuestionnaire(@RequestBody int questionnaireId,
+    public RestBean<String> publishQuestionnaire(@RequestParam("questionnaireId") int questionnaireId,
                                                  @RequestParam("startTime")
                                                  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
                                                  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
@@ -182,7 +182,7 @@ public class QuestionnaireController {
 
     // 获取问卷
     @GetMapping("/get")
-    public RestBean<Questionnaire> getQuestionnaire(@RequestBody Integer questionnaireId) {
+    public RestBean<Questionnaire> getQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId) {
         Integer userId = questionnaireService.getUserIdOfQuestionnaire(questionnaireId);
         Account account = new Account();
         account.setId(userId);
@@ -219,7 +219,7 @@ public class QuestionnaireController {
 
     // 填写问卷
     @PostMapping("/fill")
-    public RestBean<String> fillQuestionnaire(@RequestBody Questionnaire questionnaire) {
+    public RestBean<String> fillQuestionnaire(@RequestParam("questionnaireId") Questionnaire questionnaire) {
         if (questionnaire == null || questionnaire.getState() == State.UNPUBLISHED) {
             return RestBean.failure(400, "问卷不存在");
         }

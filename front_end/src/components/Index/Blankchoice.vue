@@ -5,46 +5,70 @@ import {reactive} from "vue";
 import {post} from "@/net/index.js";
 import {ElMessage} from "element-plus";
 import {Memo, Document, User} from "@element-plus/icons-vue";
+import {useRoute} from "vue-router";
+
+const route=useRoute()
+const id=JSON.parse(route.query.params);
 
 const create=()=>{
-  post('/questionnaires/create', {
+  post('/question/create-BlankQuestion', {
+    questionnaireId: id,
     title:format.title,
-    description:format.description,
+    necessary:format.necessary,
+    validation:format.validation,
+    type:format.type,
   }, (message) => {
     ElMessage.success(message)
-    router.push("/index/show")
+    router.push("/index/choicepage")
   })
 }
 
-
+const handleClick = () => {
+  // eslint-disable-next-line no-alert
+  alert('文本格式设置成功');
+}
 
 const format =reactive({
-  title:[
+  title:'',
+  necessary:[
     {
-      required:true,message:'请输入标题',
-      min:1
+      required:false,
     }
   ],
-  description:[
-    {
-      required:false,message:'请输入描述：',
-    }
-  ],
+  validation:{
+    required:false,message:'是否需要进行文本验证',
+  },
+  type:'NULL',
 })
 
-const options = reactive([]);
 
-const Newoption = () => {
-  options.push({ value: '' });
-}
 </script>
 
 <template>
-  <el-button style="margin-top: 50px">我是填空题</el-button>
-  <el-button style="margin-top: 50px" @click="Newoption">添加问题</el-button>
+  <el-button style="margin-top: 50px" >我是填空题</el-button>
 
-  <div>这里显示标题</div>
-  <div style="margin-top: 20px">这里显示对问卷的说明</div>
+  <div>
+    <el-input v-model="format.title" :maxlength="20" type="text" placeholder="请输入题目标题" style="margin-top: 5px">
+      <template #prefix>
+        <el-icon><Memo /></el-icon>
+      </template>
+    </el-input>
+  </div>
+
+  <div class="flex flex-wrap items-center">
+
+    <el-dropdown split-button type="primary" @click="handleClick" style="margin-top: 10px">
+      文本验证
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item >无</el-dropdown-item>
+          <el-dropdown-item>Phone</el-dropdown-item>
+          <el-dropdown-item>Email</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </div>
+  <el-checkbox v-model="format.necessary" label="是否必答" size="large" span="20" /> <!--v-model="form.necessary"传入是否必答-->
   <div>
 
     <div v-for="(option, index) in options" :key="index" style="margin-top: 20px;display:flex;align-items:center">
@@ -53,27 +77,12 @@ const Newoption = () => {
         <el-button type="danger" size="small" style="margin-right: 8px;" @click="removeOption(index)">
           删除
         </el-button>
-        <el-checkbox  label="是否必答" size="large" /> <!--v-model="form.necessary"传入是否必答-->
-        <!-- 输入框 -->
-        <el-input v-model="option.value" :maxlength="20" type="text" placeholder="请输入选项">
-          <template #prefix>
-            <el-icon><Memo /></el-icon>
-          </template>
 
-        </el-input>
+        <!-- 输入框 -->
       </el-form-item>
     </div>
 
-    <el-form-item prop="">
-      <el-input  type="text" placeholder="描述" style="margin-top: 10px"><!--记得加v-model="format.description"-->
-        <template #prefix>
-          <el-icon><Document /></el-icon>
-        </template>
-
-      </el-input>
-    </el-form-item>
-
-    <el-button @click="create()"  style="margin-top: 10px"  type="info">确认</el-button>
+    <el-button @click="create()"  style="margin-top: 10px"  type="success">确认</el-button>
     <el-button @click="router.push('/index/choicepage')" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
   </div>
 
