@@ -39,7 +39,12 @@ const create=()=>{
     content:choice.content
   }, (message) => {
     ElMessage.success(message)
-    router.push("/index/choicepage")
+    router.push({
+      path: "/index/choicepage",
+      query: {
+        params: id
+      }
+    })
   })
 }
 
