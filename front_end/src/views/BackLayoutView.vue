@@ -1,22 +1,22 @@
-<!--1、要确保 response.data 是一个 RestBean 对象，其中包含一个 questionnaires 属性，你需要确保从后端返回的数据格式与前端代码中预期的格式一致。-->
-<!--2、因为没有登录，所以没有访问资源的权限的问题-->
 <script setup>
-import {Search} from "@element-plus/icons-vue";
-import {ref,reactive} from 'vue';
-import {onMounted } from 'vue';
-import {get} from "@/net";
+import { Search } from "@element-plus/icons-vue";
+import { ref, reactive } from 'vue';
+import { onMounted } from 'vue';
+import {get, post} from "@/net";
 import {ElMessage} from "element-plus";
+import router from "@/router/index.js";
 
 const questionnaires = reactive([]);// 创建一个响应式的问卷列表
 const keyword = ref(''); // 使用 ref 创建响应式数据
 const currentPage=ref(1);//当前页码
-const pageSize=ref(10);//每页显示的条数
+const pageSize=ref(3);//每页显示的条数
 const selectedRows=ref([]);//选中的行
 
+
 // 在组件挂载时或者需要时调用showData方法
-onMounted(() => {
-  showData();
-});
+ onMounted(() => {
+   showData();
+ });
 
 const format = ({
   questionnaireId: '',
@@ -28,18 +28,20 @@ const format = ({
   endTime: '',
 })
 
-const transform = (time)=>{
-  return Date(time).toString({
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-}
+// const transform = (time)=>{
+//   return Date(time).toString({
+//     year: 'numeric',
+//     month: '2-digit',
+//     day: '2-digit',
+//     hour: '2-digit',
+//     minute: '2-digit',
+//     second: '2-digit'
+//   });
+// }
 
-const showData=()=>{
+const showData=(page = currentPage.value)=>{
+  // 清除现有的问卷列表
+  questionnaires.length = 0;
   get('/questionnaires/display-all', (message) => {
     for (let temp of message) {
       // const newFormat = format
@@ -57,24 +59,35 @@ const showData=()=>{
       // console.log(JSON.stringify(temp.createdTime))
       questionnaires.push(temp)
     }
+
   })
 }
 
 
-
-
 // 分页事件处理函数
-const handleCurrentChange = async (newPage) => {
+const handleCurrentChange =  (newPage) => {
   currentPage.value = newPage;
 };
 
 // 删除事件处理函数,执行批量删除操作
 const dels = () => {
-
+  Promise.all(selectedRows.value.map(row => post('/questionnaires/delete', {
+    questionnaireId: row.questionnaireId,
+  }, (message) => {
+    showData(currentPage.value);
+    if (selectedRows.value.length === 0) {
+      ElMessage.success(message)
+    }
+  })))
 };
 // 删除一行数据
-const del = (questionnaireId) => {
-
+const del = (index,row) => {
+  post('/questionnaires/delete', {
+    questionnaireId: row.questionnaireId,
+  },(message)=>{
+    ElMessage.success(message)
+    showData(currentPage.value)
+  })
 };
 
 // 编辑事件处理函数
@@ -90,19 +103,27 @@ const selected = (val) => {
 
 // 从表格中查找模板介绍中含有xxx的数据
 const searchFromData = () => {
+//使用post会报"status": 405,"error": "Method Not Allowed",
+//使用get则无法将问卷Id传到后端	"status": 400,"error": "Bad Request",
   // 实现搜索逻辑
+  get('/questionnaires/find', (message)=>{
+    console.log(message)
+    //更新表格数据，只显示搜索到的问卷的信息
+  },(message)=>{
+
+  })
 };
 
 // 跳转到问卷ID为questionnaireId的问题信息页面
 const goToAnswerPage = (questionnaireId) => {
-  this.$router.push({ name: 'QuestionInfo', params: { questionnaireId: questionnaireId } });
+  //this.$router.push({ name: 'QuestionInfo', params: { questionnaireId: questionnaireId } });
 };
 </script>
 
 <template>
-  <div>
-    <p>{{ formattedTime }}</p>
-  </div>
+<!--  <div>-->
+<!--    <p>{{ formattedTime }}</p>-->
+<!--  </div>-->
   <div class="container">
     <header>
       <h1>问卷后台管理</h1>
@@ -122,14 +143,14 @@ const goToAnswerPage = (questionnaireId) => {
           </el-row>
         </div>
         <!--表格组件-->
-        <el-table :data="questionnaires" @selection-change="selected" border style="top:110px ;left:40px">
+        <el-table :data="questionnaires" @selection-change="selected" border style="margin-top: 100px; margin-left: 40px;">
           <el-table-column type="selection" width="55"/>
 
           <el-table-column prop="questionnaireId" label="问卷ID" width="100">
             <!--           问卷ID设置为链接形式，点击问卷ID后跳转到显示该问卷的问题的页面，并在该页面添加“显示回答的问卷内容信息”按钮-->
             <template #default="{ row }">
               <!-- 设置点击问卷ID时的跳转逻辑 -->
-              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)">{{ row.questionnaireId}}</el-link>
+              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)" >{{ row.questionnaireId }}</el-link>
             </template>
           </el-table-column>
           <el-table-column prop="title" label="问卷标题" width="160" />
@@ -152,8 +173,8 @@ const goToAnswerPage = (questionnaireId) => {
             </template>
           </el-table-column>
         </el-table>
-        <!--分页组件-->
-        <div style="position:absolute;bottom:20px; left:140px;top:700px;">
+<!--        分页组件-->
+        <div style="margin-top: 30px; margin-left: 40px;">
           <el-pagination layout="prev,pager,next,jumper,total"
                          :page-size="pageSize" :current-page="currentPage" :total="50"
                          @current-change="handleCurrentChange"/>
