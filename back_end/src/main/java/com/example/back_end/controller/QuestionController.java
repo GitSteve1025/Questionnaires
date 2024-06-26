@@ -204,7 +204,7 @@ public class QuestionController {
         return RestBean.success("修改成功");
     }
 
-    // 修改单选题
+    // 修改多选题
     @PostMapping("/update-MultipleChoiceQuestion")
     public RestBean<String> updateMultipleChoiceQuestion(@RequestParam("questionnaireId") Integer questionId,
                                                          @Length(min = 1) @RequestParam("title") String title,
@@ -235,7 +235,7 @@ public class QuestionController {
         return RestBean.success("修改成功");
     }
 
-    // 修改单选题
+    // 修改填空题
     @PostMapping("/update-BlankQuestion")
     public RestBean<String> updateBlankQuestion(@RequestParam("questionnaireId") Integer questionId,
                                                 @Length(min = 1) @RequestParam("title") String title,

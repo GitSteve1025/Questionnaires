@@ -116,12 +116,7 @@ const searchFromData = () => {
 
 // 跳转到问卷ID为questionnaireId的问题信息页面
 const goToAnswerPage = (questionnaireId) => {
-  router.push({
-    path: 'QuestionInfo',
-    query: {
-      params: questionnaireId
-    }
-  })
+  //this.$router.push({ name: 'QuestionInfo', params: { questionnaireId: questionnaireId } });
 };
 </script>
 
