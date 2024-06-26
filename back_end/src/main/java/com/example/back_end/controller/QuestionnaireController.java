@@ -1,5 +1,8 @@
 package com.example.back_end.controller;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.example.back_end.entity.Question.BlankQuestion.BlankQuestion;
 import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
@@ -16,8 +19,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 // @RequestParam 是前端必要参数
 // @RequestParam("questionnaireId json 格式
@@ -219,7 +224,18 @@ public class QuestionnaireController {
 
     // 填写问卷
     @PostMapping("/fill")
-    public RestBean<String> fillQuestionnaire(@RequestParam("questionnaireId") Questionnaire questionnaire) {
+    public RestBean<String> fillQuestionnaire(@RequestParam("questionnaire") String text) {
+        JSONObject object =  JSON.parseObject(text);
+        System.out.println(text);
+        Integer questionnaireId = object.getInteger("questionnaireId");
+        JSONArray choiceQuestionsParams = object.getJSONArray("choiceQuestions");
+        List<ChoiceQuestion> choiceQuestions = choiceQuestionsParams.toJavaList(ChoiceQuestion.class);
+        JSONArray blankQuestionsParams = object.getJSONArray("blankQuestions");
+        List<BlankQuestion> blankQuestions = blankQuestionsParams.toJavaList(BlankQuestion.class);
+        Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setQuestionnaireId(questionnaireId);
+        questionnaire.setChoiceQuestions((ArrayList<ChoiceQuestion>) choiceQuestions);
+        questionnaire.setBlankQuestions((ArrayList<BlankQuestion>) blankQuestions);
         if (questionnaire == null || questionnaire.getState() == State.UNPUBLISHED) {
             return RestBean.failure(400, "问卷不存在");
         }
