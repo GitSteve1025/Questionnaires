@@ -70,6 +70,14 @@ const del = (index,row) => {
   })
 };
 
+const shareId = (index, row) => {
+  ElMessageBox.alert(row.questionnaireId,'问卷ID', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: 'OK',
+
+  })
+};
 // 编辑事件处理函数
 const edit = (index, row) => {
   goToAnswerPage(row.questionnaireId)
@@ -165,13 +173,6 @@ const goToAnswerPage = (questionnaireId) => {
         <el-table :data="questionnaires" @selection-change="selected" border style=" overflow-y: auto; margin-top: 100px; margin-left: 60px;width:1065px">
           <el-table-column type="selection" width="55"/>
 
-          <el-table-column prop="questionnaireId" label="问卷ID" width="60">
-            <!--           问卷ID设置为链接形式，点击问卷ID后跳转到显示该问卷的问题的页面，并在该页面添加“显示回答的问卷内容信息”按钮-->
-            <template #default="{ row }">
-              <!-- 设置点击问卷ID时的跳转逻辑 -->
-              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)"> {{ row.questionnaireId }} </el-link>
-            </template>
-          </el-table-column>
           <el-table-column prop="title" label="问卷标题" width="160" />
           <el-table-column prop="description" label="问卷描述" width="130" />
           <el-table-column prop="state" label="问卷状态" width="100" />
@@ -179,7 +180,7 @@ const goToAnswerPage = (questionnaireId) => {
           <el-table-column prop="startTime" label="问卷开始时间" width="120" />
           <el-table-column prop="endTime" label="问卷结束时间" width="120" />
 
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作" width="260">
             <template #default="scope">
               <el-button size="small" type="primary" @click="edit(scope.$index,scope.row)">
                 编辑
@@ -192,6 +193,7 @@ const goToAnswerPage = (questionnaireId) => {
               <el-button size="small" type="primary" @click="publish(scope.$index,scope.row)">
                 发布
               </el-button>
+              <el-button size="small" type="primary" @click="shareId(scope.$index,scope.row)">分享</el-button>
             </template>
           </el-table-column>
         </el-table>
