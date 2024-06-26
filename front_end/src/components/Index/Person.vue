@@ -1,76 +1,73 @@
-<template>
-    <div class="person-info">
-      <div class="user-info-box">
-        <label for="username">用户名:</label>
-        <input type="text" id="username" v-model="info.username" readonly>
-      </div>
-      <div class="user-info-box">
-        <label for="email">邮箱:</label>
-        <input type="text" id="email" v-model="info.email" readonly>
-      </div>
-    </div>
-</template>
-
-<style scoped>
-.person-info {
-  background-color: #f0f0f0;
-  padding: 200px;
-  border-radius: 5px;
-  position: absolute;
-  bottom: 200px;
-  right: 400px;
-  z-index: 1000;
-}
-.container {
-  position: relative; /* 设置为相对定位 */
-}
-.user-info-box {
-  margin-bottom: 20px; /* 添加一些空白 */
-}
-
-label {
-  display: inline-block; /* 将 label 元素设置为内联块级元素 */
-  width: 100px; /* 设置宽度，根据实际需要调整 */
-}
-
-input {
-  width: 200px; /* 设置宽度，根据实际需要调整 */
-  margin-left: 10px; /* 添加一些空白 */
-}
-</style>
-
-
-<script setup>
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { reactive } from 'vue';
 import { useRoute } from 'vue-router';
+import {RouteLocationNormalized} from "vue-router";
 
 const route = useRoute();
-const info = JSON.parse(route.query.params);
+const params=route.query.params as string;
+
+const info=reactive(JSON.parse(params));
+
+const radiusGroup = ref([
+  {
+    name: 'Large Radius',
+    type: 'base',
+  },
+])
 
 </script>
 
+<template>
+  <el-row :gutter="12" class="demo-radius">
+    <el-col
+        v-for="(radius, i) in radiusGroup"
+        :key="i"
+        :span="6"
+        :xs="{ span: 12 }"
+    >
+      <div
+          class="radius"
+          :style="{
+          borderRadius: radius.type
+            ? `var(--el-border-radius-${radius.type})`
+            : '',
+        }"
+      >
+        <label for="username" class="custom-label username-label">用户名:</label>
+        <input type="text" id="username" v-model="info.username" readonly class="custom-input">
+        <br>
+        <label for="email" class="custom-label">邮箱:</label>
+        <input type="text" id="email" v-model="info.email" readonly class="custom-input">
+      </div>
+    </el-col>
+  </el-row>
+</template>
+
 <style scoped>
-.person-info {
-  background-color: #f0f0f0;
-  padding: 200px;
-  border-radius: 5px;
-  position: absolute;
-  bottom: 200px;
-  right: 400px;
-  z-index: 1000;
+.demo-radius .radius {
+  height: 500px;
+  width: 200%;
+  border: 3px solid var(--el-border-color);
+  border-radius: 0;
+  margin-top: 150px;
+  margin-left: 380px;
 }
 
-.user-info-box {
-  margin-bottom: 20px; /* 添加一些空白 */
+.custom-label {
+  font-family: 'Arial', sans-serif; /* 更改字体 */
+  font-size: 30px; /* 更改字体大小 */
+  margin-right: 20px; /* 添加标签和输入框之间的间距 */
 }
 
-label {
-  display: inline-block; /* 将 label 元素设置为内联块级元素 */
-  width: 100px; /* 设置宽度，根据实际需要调整 */
+.username-label {
+  margin-top: 50px;
 }
 
-input {
-  width: 200px; /* 设置宽度，根据实际需要调整 */
-  margin-left: 10px; /* 添加一些空白 */
+.custom-input {
+  font-family: 'Arial', sans-serif; /* 更改字体 */
+  font-size: 30px; /* 更改字体大小 */
+  margin-bottom: 151px; /* 添加输入框之间的间距 */
 }
 </style>
+

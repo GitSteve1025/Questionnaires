@@ -228,6 +228,7 @@ const goToAnswerPage = (questionnaireId) => {
   display:flex;
   flex-direction:column;/*垂直排列*/
   min-height:100vh;/*确保容器至少与视口一样高*/
+  position:relative;
 }
 header{
   background-color: rgba(255, 193, 127, 0.52);
