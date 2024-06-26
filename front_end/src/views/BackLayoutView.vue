@@ -27,17 +27,6 @@ const format = ({
   endTime: '',
 })
 
-// const transform = (time)=>{
-//   return Date(time).toString({
-//     year: 'numeric',
-//     month: '2-digit',
-//     day: '2-digit',
-//     hour: '2-digit',
-//     minute: '2-digit',
-//     second: '2-digit'
-//   });
-// }
-
 const showData=()=>{
   // 清除现有的问卷列表
   questionnaires.length = 0;
@@ -45,10 +34,8 @@ const showData=()=>{
     for (let temp of message) {
       questionnaires.push(temp)
     }
-
   })
 }
-
 // 删除事件处理函数,执行批量删除操作
 const dels = () => {
   Promise.all(selectedRows.value.map(row => post('/questionnaires/delete', {
@@ -131,7 +118,6 @@ const searchFromData = () => {
     console.log(message)
     //更新表格数据，只显示搜索到的问卷的信息
   },(message)=>{
-
   })
 };
 
@@ -193,7 +179,9 @@ const goToAnswerPage = (questionnaireId) => {
               <el-button size="small" type="primary" @click="publish(scope.$index,scope.row)">
                 发布
               </el-button>
-              <el-button size="small" type="primary" @click="shareId(scope.$index,scope.row)">分享</el-button>
+              <el-button size="small" type="primary" @click="shareId(scope.$index,scope.row)">
+                分享
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
