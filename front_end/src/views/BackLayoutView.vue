@@ -14,9 +14,9 @@ const selectedRows=ref([]);//选中的行
 
 
 // 在组件挂载时或者需要时调用showData方法
- onMounted(() => {
-   showData();
- });
+onMounted(() => {
+  showData();
+});
 
 const format = ({
   questionnaireId: '',
@@ -42,7 +42,7 @@ const format = ({
 const showData=(page = currentPage.value)=>{
   // 清除现有的问卷列表
   questionnaires.length = 0;
-  get('/questionnaires/display-all', (message) => {
+  get('/questionnaires/display-all', {}, (message) => {
     for (let temp of message) {
       // const newFormat = format
       // newFormat.questionnaireId = temp.questionnaireId
@@ -93,7 +93,13 @@ const del = (index,row) => {
 // 编辑事件处理函数
 const edit = (index, row) => {
   // 执行编辑操作
-  console.log('编辑第', index, '行数据', row);
+  localStorage.setItem('问卷ID', 'row.questionnaireId');
+  router.push('/EditQuestionnaire')
+  post('/choice/display-all', (message) => {
+        questionId:row.questionnaireId.choice[0].id
+
+      }
+  )
 };
 
 // 选中行事件处理函数
@@ -106,24 +112,32 @@ const searchFromData = () => {
 //使用post会报"status": 405,"error": "Method Not Allowed",
 //使用get则无法将问卷Id传到后端	"status": 400,"error": "Bad Request",
   // 实现搜索逻辑
-  get('/questionnaires/find', (message)=>{
+  get('/questionnaires/find',{
+    questionnaireId:keyword
+  }, (message)=> {
     console.log(message)
-    //更新表格数据，只显示搜索到的问卷的信息
-  },(message)=>{
+  },()=>{
 
   })
+
 };
 
 // 跳转到问卷ID为questionnaireId的问题信息页面
+
 const goToAnswerPage = (questionnaireId) => {
-  //this.$router.push({ name: 'QuestionInfo', params: { questionnaireId: questionnaireId } });
+  router.push({
+    path: '/backlayout/QuestionInfo',
+    query: {
+      params: JSON.stringify(questionnaireId)
+    }
+  }) //创建成功则进行跳转
 };
 </script>
 
 <template>
-<!--  <div>-->
-<!--    <p>{{ formattedTime }}</p>-->
-<!--  </div>-->
+  <!--  <div>-->
+  <!--    <p>{{ formattedTime }}</p>-->
+  <!--  </div>-->
   <div class="container">
     <header>
       <h1>问卷后台管理</h1>
@@ -164,16 +178,16 @@ const goToAnswerPage = (questionnaireId) => {
             <template #default="scope">
               <el-button size="small" type="primary" @click="edit(scope.$index,scope.row)">
                 编辑
-<!--                跳转到 首页->我的问卷->相应问卷的编辑问卷 处进行处理-->
+                <!--                跳转到 首页->我的问卷->相应问卷的编辑问卷 处进行处理-->
               </el-button>
               <el-button size="small" @click="del(scope.$index,scope.row)">
                 删除
-<!--                跳转到 首页->我的问卷->相应问卷的删除问卷 处进行处理-->
+                <!--                跳转到 首页->我的问卷->相应问卷的删除问卷 处进行处理-->
               </el-button>
             </template>
           </el-table-column>
         </el-table>
-<!--        分页组件-->
+        <!--        分页组件-->
         <div style="margin-top: 30px; margin-left: 40px;">
           <el-pagination layout="prev,pager,next,jumper,total"
                          :page-size="pageSize" :current-page="currentPage" :total="50"

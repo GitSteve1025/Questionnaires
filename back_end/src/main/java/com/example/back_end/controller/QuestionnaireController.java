@@ -117,7 +117,7 @@ public class QuestionnaireController {
     }
 
     // 查找问卷
-    @GetMapping("/find")
+    @PostMapping("/find")
     public RestBean<Questionnaire> findQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId) {
         Account account = authorizeService.currentAccount();
         Questionnaire questionnaire = questionnaireService.findQuestionnaire(account, questionnaireId);
