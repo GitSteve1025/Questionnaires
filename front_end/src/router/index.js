@@ -67,9 +67,9 @@ const router = createRouter({
           component:()=>import('@/components/Index/ShowAllQuestion.vue')
         }
       ]
-    }
-    ,{
-       path:'/backlayout',
+    },
+    {
+      path:'/backlayout',
       name :'backlayout',
       component:()=>import('@/views/BackLayoutView.vue'),
       children:[//子路由
@@ -77,23 +77,11 @@ const router = createRouter({
           path:'InfoManage',
           name:'backlayout-InfoManage',
           component: ()=>import('@/components/BackLayout/InfoManage.vue'),
-          children:[//子子路由
-            {
-              path:'QuestionnaireInfo',
-              name:'InfoManage-QuestionnaireInfo',
-              component:()=>import('@/components/BackLayout/QuestionnaireInfo.vue'),
-            },
-            {
-              path:'QuestionInfo/:id',
-              name:'InfoManage-QuestionInfo',
-              component:()=>import('@/components/BackLayout/QuestionInfo.vue'),
-            },
-            {
-              path:'AnswerInfo',
-              name:'InfoManage-AnswerInfo',
-              component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
-            }
-          ]
+        },
+        {
+          path:'AnswerInfo',
+          name:'backlayout-AnswerInfo',
+          component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
         },
         {
           path:'UserManage',
@@ -113,7 +101,14 @@ const router = createRouter({
           ]
         }
       ]
+    },
+    {
+      path:'/QuestionInfo',
+      name:'QuestionInfo',
+      component:()=>import('@/components/BackLayout/QuestionInfo.vue')
     }
+
+
   ]
 })
 

@@ -63,7 +63,7 @@ const create=()=>{
       </el-input>
     </el-form-item>
 
-    <el-button @click="create()"  style="margin-top: 10px"  type="success">确认</el-button>
+    <el-button @click="create()"  style="text-align: center;margin-top: 10px"  type="success">确认</el-button>
     <el-button @click="" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
   </div>
 

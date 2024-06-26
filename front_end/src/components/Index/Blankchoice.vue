@@ -28,6 +28,15 @@ const create=()=>{
   })
 }
 
+const cancel=()=>{
+  router.push({
+    path:"/index/choicepage",
+    query: {
+      params: id
+    }
+  })
+}
+
 const handleClick = () => {
   // eslint-disable-next-line no-alert
   alert('文本格式设置成功');
@@ -88,7 +97,7 @@ const format =reactive({
     </div>
 
     <el-button @click="create()"  style="margin-top: 10px"  type="success">确认</el-button>
-    <el-button @click="router.push('/index/choicepage')" style="margin-left: 20px;margin-top:10px" type="danger">返回</el-button>
+    <el-button @click="cancel()" style="margin-left: 20px;margin-top:10px" type="info">返回</el-button>
   </div>
 
 
