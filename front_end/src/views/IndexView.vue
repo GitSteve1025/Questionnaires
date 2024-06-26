@@ -17,7 +17,7 @@
     <el-sub-menu index="2">
       <template #title>我的问卷</template>
       <el-menu-item index="2-1" @click="goToCreate" type="primary">创建问卷</el-menu-item>
-      <el-menu-item index="2-2" @click="goToShow">查看问卷</el-menu-item>
+      <el-menu-item index="2-2" @click="goToAdminMode">查看问卷</el-menu-item>
       <el-menu-item index="2-3">item three</el-menu-item>
       <el-sub-menu index="2-4">
         <template #title>item four</template>
@@ -28,7 +28,7 @@
     </el-sub-menu>
     <el-menu-item index="3" disabled>客服中心</el-menu-item>
     <el-menu-item index="4" @click="goToPerson" type="primary">个人资料</el-menu-item>
-
+    <el-menu-item index="5" @click="logout" type="danger" plain>退出登录</el-menu-item>
     <el-row class="demo-avatar demo-basic" style="margin-left: 600px">
       <el-col :span="12">
         <div class="sub-title">photo</div>
@@ -41,9 +41,6 @@
     </el-row>
   </el-menu>
 
-  <div style="margin-top: 10px">
-    <el-button @click="goToAdminMode" type="primary">进入管理员模式</el-button>
-  </div>
 
 
 
@@ -53,9 +50,6 @@
 
 
 
-  <div style="margin-top: 440px">
-    <el-button @click="logout()" type="danger" plain>退出登录</el-button>
-  </div>
 
 
 </template>
