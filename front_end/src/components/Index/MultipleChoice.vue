@@ -39,7 +39,21 @@ const create=()=>{
     maxSelected:format.maxSelected,
   }, (message) => {
     ElMessage.success(message)
-    router.push("/index/choicepage")
+    router.push({
+      path: "/index/choicepage",
+      query: {
+        params: id
+      }
+    })
+  })
+}
+
+const cancel=()=>{
+  router.push({
+    path:"/index/choicepage",
+    query: {
+      params: id
+    }
   })
 }
 
@@ -61,7 +75,7 @@ const removeOption=(index)=>{
   <el-button style="margin-top: 50px" @click="Newoption">添加选项</el-button>
 
   <el-input v-model="format.title" placeholder="请输入标题" style="margin-top: 5px"></el-input>
-  <el-checkbox v-model="format.necessary" label="是否必答" size="large" /> <!--v-model="form.necessary"传入是否必答-->
+  <el-checkbox style="margin-left: 5px" v-model="format.necessary" label="是否必答" size="large" /> <!--v-model="form.necessary"传入是否必答-->
 
   <el-input v-model="format.minSelected" placeholder="请输入至少选择几个选项"></el-input>
   <el-input v-model="format.maxSelected" placeholder="请输入最多选择几个选项" style="margin-top: 10px"></el-input>
@@ -85,7 +99,7 @@ const removeOption=(index)=>{
   </div>
 
   <el-button style="margin-top: 100px" type="success" @click="create()" >确认</el-button>
-  <el-button style="margin-left: 30px;margin-top: 100px" type="primary" @click="router.push('/index/choicepage')">返回</el-button>
+  <el-button style="margin-left: 30px;margin-top: 100px" type="primary" @click="cancel()">返回</el-button>
 
 </template>
 
