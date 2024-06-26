@@ -35,9 +35,22 @@ const Goblank=()=>{
   })
 }
 
+const goToShow=()=>{
+  router.push({
+    path:"/index/ShowAllQuestion",
+    query: {
+      params: id
+    }
+  })
+};
+
 </script>
 
 <template>
+
+  <div style="margin-top: 20px">
+    <el-button @click="goToShow" type="primary" plain>查看问卷</el-button>
+  </div>
 
   <div style="margin-top: 40px">
     <el-button style="margin-left: 150px"  @click="Gosingle">
