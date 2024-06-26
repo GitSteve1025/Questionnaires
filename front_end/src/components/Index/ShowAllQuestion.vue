@@ -80,11 +80,14 @@ onMounted(() => {
   showData();
 });
 
-const format = ({
-  questionId: '',
-  title: '',
-
-})
+const goBack = () => {
+  router.push({
+    path: '/index/choicepage',
+    query: {
+      params: Id
+    }
+  })
+};
 
 const updateSelectedCount = (question, choice) => {
   if (choice.state) {
@@ -103,7 +106,7 @@ const updateSelectedCount = (question, choice) => {
     <div>
       <el-row :gutter="10" style="position: absolute;top:100px;">
         <el-col :span="6" style="position: absolute;left:150px;">
-          <el-button style="margin-top: 265px" type="success" @click="router.push('/index/choicepage')">返回</el-button>
+          <el-button style="margin-top: 265px" type="success" @click=goBack()>返回</el-button>
         </el-col>
       </el-row>
     </div>
