@@ -186,7 +186,7 @@ public class QuestionnaireController {
     // 问卷填写者层面
 
     // 获取问卷
-    @GetMapping("/get")
+    @PostMapping("/get")
     public RestBean<Questionnaire> getQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId) {
         Integer userId = questionnaireService.getUserIdOfQuestionnaire(questionnaireId);
         Account account = new Account();
@@ -232,13 +232,13 @@ public class QuestionnaireController {
         List<ChoiceQuestion> choiceQuestions = choiceQuestionsParams.toJavaList(ChoiceQuestion.class);
         JSONArray blankQuestionsParams = object.getJSONArray("blankQuestions");
         List<BlankQuestion> blankQuestions = blankQuestionsParams.toJavaList(BlankQuestion.class);
-        Questionnaire questionnaire = new Questionnaire();
-        questionnaire.setQuestionnaireId(questionnaireId);
-        questionnaire.setChoiceQuestions((ArrayList<ChoiceQuestion>) choiceQuestions);
-        questionnaire.setBlankQuestions((ArrayList<BlankQuestion>) blankQuestions);
+        Questionnaire questionnaire = questionnaireService.findQuestionnaire(questionnaireId);
         if (questionnaire == null || questionnaire.getState() == State.UNPUBLISHED) {
             return RestBean.failure(400, "问卷不存在");
         }
+        questionnaire.setQuestionnaireId(questionnaireId);
+        questionnaire.setChoiceQuestions((ArrayList<ChoiceQuestion>) choiceQuestions);
+        questionnaire.setBlankQuestions((ArrayList<BlankQuestion>) blankQuestions);
         Date currentTime = new Date();
         if (questionnaire.getStartTime().after(currentTime)) {
             return RestBean.failure(400, "问卷未开始");
@@ -246,12 +246,10 @@ public class QuestionnaireController {
         if (questionnaire.getEndTime().before(currentTime)) {
             return RestBean.failure(400, "问卷已截止");
         }
-
         String s = questionnaireService.checkQuestionnaire(questionnaire);
         if (s != null) {
             return RestBean.failure(400, s);
         }
-        System.out.println(questionnaire);
         Account account = authorizeService.currentAccount();
         infoService.insertQuestionnaireInfo(account, questionnaire);
         for (ChoiceQuestion choiceQuestion : questionnaire.getChoiceQuestions()) {
@@ -265,6 +263,7 @@ public class QuestionnaireController {
         }
         for (BlankQuestion blankQuestion : questionnaire.getBlankQuestions()) {
             if (blankQuestion.getState()) {
+                System.out.println(blankQuestion.getBlank());
                 if (blankQuestion.getBlank().getState()) {
                     infoService.insertBlankInfo(blankQuestion.getBlank());
                 }

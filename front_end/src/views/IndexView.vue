@@ -13,11 +13,11 @@
       style="margin-top: 20px;height: 8vh"
   >
     <div class="welcome-title"  style="margin-left:10px;margin-top:10px;font-size: 40px;font-weight:bold;display:flex ">问卷星系统</div>
-    <el-menu-item index="1" style="margin-left: 30px" @click="Gohome">首页</el-menu-item>
+    <el-menu-item index="1" style="margin-left: 30px" @click="Gohome()">首页</el-menu-item>
     <el-sub-menu index="2">
       <template #title>我的问卷</template>
-      <el-menu-item index="2-1" @click="goToCreate" type="primary">创建问卷</el-menu-item>
-      <el-menu-item index="2-2" @click="goToAdminMode">查看问卷</el-menu-item>
+      <el-menu-item index="2-1" @click="goToCreate()" type="primary">创建问卷</el-menu-item>
+      <el-menu-item index="2-2" @click="goToAdminMode()">查看问卷</el-menu-item>
       <el-menu-item index="2-3">item three</el-menu-item>
       <el-sub-menu index="2-4">
         <template #title>item four</template>
@@ -26,9 +26,9 @@
         <el-menu-item index="2-4-3">item three</el-menu-item>
       </el-sub-menu>
     </el-sub-menu>
-    <el-menu-item index="3" disabled>客服中心</el-menu-item>
-    <el-menu-item index="4" @click="goToPerson" type="primary">个人资料</el-menu-item>
-    <el-menu-item index="5" @click="logout" type="danger" plain>退出登录</el-menu-item>
+    <el-menu-item index="3" @click="open()">填写问卷</el-menu-item>
+    <el-menu-item index="4" @click="goToPerson()" type="primary">个人资料</el-menu-item>
+    <el-menu-item index="5" @click="logout()" type="danger" plain>退出登录</el-menu-item>
     <el-row class="demo-avatar demo-basic" style="margin-left: 600px">
       <el-col :span="12">
         <div class="sub-title">photo</div>
@@ -57,10 +57,12 @@
 
 <script lang="ts" setup>
 import {get} from "@/net";
-import {ElMessage} from "element-plus";
 import router from "@/router";
 import {useStore} from "@/stores";
 import {ref, reactive, toRefs, onMounted} from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
+
 
 const state = reactive({
   squareUrl:
@@ -113,6 +115,36 @@ const goToPerson=() => {
     }
   })
 };
+
+const open = () => {
+  ElMessageBox.prompt('请输入你要填写的问卷ID', '填写问卷', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    inputErrorMessage: 'ID',
+  })
+      .then(({ value }) => {
+        ElMessage({
+          type: 'success',
+          message: `页面检索成功`
+        });
+        let id=value;
+        // 使用 router.push 跳转页面
+        router.push({
+          path: `/index/ShowAllQuestion`, // 将此路径替换为目标路径
+          query: { params:id } // 如果你需要将文件ID作为查询参数传递
+        });
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '返回',
+        });
+      });
+}
+
+const goToWrite=()=>{
+  open
+}
 
 const showCurrentUser =()=>{
   get('/api/auth/currentUser', (account) => {
