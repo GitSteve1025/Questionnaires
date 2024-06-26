@@ -166,7 +166,12 @@ const goToAnswerPage = (questionnaireId) => {
         <!--批量删除-->
         <div>
           <el-row :gutter="10" style="position: absolute;top:160px;left:65px">
-            <el-button type="danger" @click="dels">批量删除</el-button>
+            <el-col :span="18" style="position: absolute;left:-5px;">
+              <el-button type="danger" @click="dels">批量删除</el-button>
+            </el-col>
+            <el-col :span="6" style="position: absolute;left:130px;">
+              <el-button type="success" @click="router.push('/index')">返回</el-button>
+            </el-col>
           </el-row>
         </div>
         <!--表格组件-->
