@@ -11,19 +11,8 @@ const selectedRows=ref([]);//选中的行
 const route=useRoute()
 let Id=JSON.parse(route.query.params);
 const questions =reactive([]);
-// const choiceQuestions = reactive([]);// 创建一个响应式的问卷选择问题列表
-// const blankQuestions =reactive([]);//创建一个响应式的问卷填空问题列表
-// const activeNames = ref([choiceQuestions, blankQuestions]); // 默认展开的选择题和填空题
-
-// const question = ({
-//   sequenceId: '',
-//   choiceQuestion: '',
-//   blankQuestion: '',
-// })
 
 const showData=()=>{
-  // blankQuestions.length = 0;
-  // choiceQuestions.length=0;
   post('/questionnaires/get',{
     questionnaireId:Id
   }, (message)=> {
@@ -96,25 +85,6 @@ const format = ({
   title: '',
 
 })
-
-// 删除事件处理函数,执行批量删除操作
-const dels = () => {
-
-};
-// 删除一行数据
-const del = (index,row) => {
-
-};
-
-// 编辑事件处理函数
-const edit = (index, row) => {
-
-};
-
-// 选中行事件处理函数
-const selected = (val) => {
-  selectedRows.value = val;
-};
 
 const updateSelectedCount = (question, choice) => {
   if (choice.state) {
