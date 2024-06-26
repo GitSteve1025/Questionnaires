@@ -35,7 +35,12 @@ const router = createRouter({
         path:'mypage',
         name:'index-mypage',
         component:()=>import('@/components/Index/Mypage.vue')
-      },
+         },
+        {
+          path:'Person',
+          name:'person',
+          component:()=>import('@/components/Index/Person.vue'),
+        },
         {
           path:'homepage',
           name:'index-homepage',

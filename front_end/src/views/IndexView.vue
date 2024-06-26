@@ -27,7 +27,7 @@
       </el-sub-menu>
     </el-sub-menu>
     <el-menu-item index="3" disabled>客服中心</el-menu-item>
-    <el-menu-item index="4">个人资料</el-menu-item>
+    <el-menu-item index="4" @click="goToPerson" type="primary">个人资料</el-menu-item>
 
     <el-row class="demo-avatar demo-basic" style="margin-left: 600px">
       <el-col :span="12">
@@ -62,7 +62,7 @@ import {get} from "@/net";
 import {ElMessage} from "element-plus";
 import router from "@/router";
 import {useStore} from "@/stores";
-import { ref ,reactive,toRefs} from 'vue'
+import {ref, reactive, toRefs, onMounted} from 'vue'
 
 const state = reactive({
   squareUrl:
@@ -102,6 +102,30 @@ const goToAdminMode = () => {
 const goToCreate=()=>{
   router.push('/index/mypage');
 };
+
+const format=({
+  username:'',
+  email:''
+})
+
+const goToPerson=() => {
+  router.push({path:'/index/Person',
+    query: {
+      params: JSON.stringify(format)
+    }
+  })
+};
+
+const showCurrentUser =()=>{
+  get('/api/auth/currentUser', (account) => {
+    format.username = account.username;
+    format.email = account.email;
+  })
+};
+
+onMounted(() => {
+  showCurrentUser(); // 在组件挂载时调用 showCurrentUser 函数
+});
 </script>
 
 

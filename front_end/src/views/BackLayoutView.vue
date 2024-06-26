@@ -44,19 +44,6 @@ const showData=(page = currentPage.value)=>{
   questionnaires.length = 0;
   get('/questionnaires/display-all', (message) => {
     for (let temp of message) {
-      // const newFormat = format
-      // newFormat.questionnaireId = temp.questionnaireId
-      // newFormat.title = temp.title
-      // newFormat.description = temp.description
-      // newFormat.state = temp.state
-      // newFormat.createdTime = transform(temp.createdTime)
-      // if (temp.startTime !== '') {
-      //   newFormat.startTime = transform(temp.startTime)
-      // }
-      // if (temp.endTime !== '') {
-      //   newFormat.endTime = transform(temp.endTime)
-      // }
-      // console.log(JSON.stringify(temp.createdTime))
       questionnaires.push(temp)
     }
 
@@ -123,6 +110,7 @@ const goToAnswerPage = (questionnaireId) => {
     }
   })
 };
+
 </script>
 
 <template>
@@ -140,7 +128,6 @@ const goToAnswerPage = (questionnaireId) => {
         </div>
       </div>
       <div class="column" style="background-color: white">
-
         <!--批量删除-->
         <div>
           <el-row :gutter="10" style="position: absolute;top:160px;left:144px">
@@ -184,6 +171,7 @@ const goToAnswerPage = (questionnaireId) => {
                          :page-size="pageSize" :current-page="currentPage" :total="50"
                          @current-change="handleCurrentChange"/>
         </div>
+
 
       </div>
 
