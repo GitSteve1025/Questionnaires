@@ -24,7 +24,7 @@ const questions =reactive([]);
 const showData=()=>{
   // blankQuestions.length = 0;
   // choiceQuestions.length=0;
-  post('/questionnaires/find',{
+  post('/questionnaires/get',{
     questionnaireId:Id
   }, (message)=> {
     console.log(message)
@@ -60,10 +60,10 @@ const commit=()=>{
   for (let temp of questions) {
     let val = temp;
     console.log(val);
-
     if (val.category === "BLANK_QUESTION") {
       if (val.blank.content.length > 0) {
         val.state = true;
+        val.blank.state = true;
       }
       Questionnaire.blankQuestions.push(val);
     } else {
@@ -79,14 +79,11 @@ const commit=()=>{
       choiceQuestions: Questionnaire.choiceQuestions,
       blankQuestions: Questionnaire.blankQuestions
     })
-  }),(message)=>{
+  },(message)=>{
     ElMessage.success('提交成功')
-    router.push('/index/choicepage')
-  },()=>{
-    ElMessage.warning(message)
-  }
+    router.push('/index')
+  })
   //执行向后端的提交操作
-
 }
 
 // 在组件挂载时获取问卷数据
@@ -136,17 +133,16 @@ const updateSelectedCount = (question, choice) => {
     <div>
       <el-row :gutter="10" style="position: absolute;top:100px;">
         <el-col :span="6" style="position: absolute;left:150px;">
-          <el-button type="success" @click="router.push('/index/choicepage')">返回</el-button>
+          <el-button style="margin-top: 265px" type="success" @click="router.push('/index/choicepage')">返回</el-button>
         </el-col>
       </el-row>
     </div>
     <!--表格组件-->
-    <el-table :data="questions" @selection-change="selected" border style="margin-top: 90px; margin-left: 40px; width:885px" >
-      <el-table-column type="selection" width="55"/>
+    <el-table :data="questions"  border style="margin-top: 90px; margin-left: 40px; width:885px" >
       <el-table-column prop="sequenceId" label="问题顺序" width="160" />
       <el-table-column prop="title" label="题目" width="130"/>
       <el-table-column prop="category" label="问题种类" width="100" />
-      <el-table-column label="问题选项" width="300" >
+      <el-table-column label="问题选项"  >
         <template #default="{ row }">
           <div>
             是否必填: {{ row.necessary ? '是' : '否' }}
@@ -184,16 +180,6 @@ const updateSelectedCount = (question, choice) => {
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="140">
-        <template #default="scope">
-          <el-button size="small" type="primary" @click="edit(scope.$index,scope.row)">
-            编辑
-          </el-button>
-          <el-button size="small" @click="del(scope.$index,scope.row)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
 <el-button style="margin-top: 20px;margin-left: 40px" type="primary" @click="commit()">确认提交</el-button>
