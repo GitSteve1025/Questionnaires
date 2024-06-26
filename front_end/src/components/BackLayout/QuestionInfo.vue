@@ -5,24 +5,17 @@ import {useRoute} from "vue-router";
 import {onMounted, reactive, ref} from "vue";
 import {get, post} from "@/net/index.js";
 import {Search} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
 const selectedRows=ref([]);//选中的行
 
 const route=useRoute()
 const questionnaireId=JSON.parse(route.query.params);
 const questions =reactive([]);
-// const choiceQuestions = reactive([]);// 创建一个响应式的问卷选择问题列表
-// const blankQuestions =reactive([]);//创建一个响应式的问卷填空问题列表
-// const activeNames = ref([choiceQuestions, blankQuestions]); // 默认展开的选择题和填空题
 
-// const question = ({
-//   sequenceId: '',
-//   choiceQuestion: '',
-//   blankQuestion: '',
-// })
+
 
 const showData=()=>{
-  // blankQuestions.length = 0;
-  // choiceQuestions.length=0;
+  questions.length=0;
   post('/questionnaires/find',{
     questionnaireId:questionnaireId
   }, (message)=> {
@@ -47,19 +40,27 @@ onMounted(() => {
   showData();
 });
 
-const format = ({
-  questionId: '',
-  title: '',
-
-})
-
 // 删除事件处理函数,执行批量删除操作
 const dels = () => {
-
+  Promise.all(selectedRows.value.map(row => {
+    let id = row.questionId;
+    post('/question/delete', {
+    questionId: id,
+  }, (message) => {
+    showData();
+    if (selectedRows.value.length === 0) {
+      ElMessage.success(message)
+    }
+  })}))
 };
 // 删除一行数据
 const del = (index,row) => {
-
+  post('/question/delete', {
+    questionId: row.questionId,
+  },(message)=>{
+    ElMessage.success(message)
+    showData()
+  })
 };
 
 // 编辑事件处理函数
@@ -81,7 +82,7 @@ const selected = (val) => {
     <div>
       <el-row :gutter="10" style="position: absolute;top:100px;">
         <el-col :span="18" style="position: absolute;left:40px;">
-          <el-button type="danger">批量删除</el-button>
+          <el-button type="danger" @click="dels">批量删除</el-button>
         </el-col>
         <el-col :span="6" style="position: absolute;left:150px;">
           <el-button type="success" @click="router.push('/backlayout')">返回</el-button>
@@ -89,7 +90,7 @@ const selected = (val) => {
       </el-row>
     </div>
     <!--表格组件-->
-    <el-table :data="questions" @selection-change="selected" border style="margin-top: 90px; margin-left: 40px; width:885px" >
+    <el-table :data="questions" @selection-change="selected" border style=" overflow-y: auto; margin-top: 90px; margin-left: 40px; width:885px" >
       <el-table-column type="selection" width="55"/>
       <el-table-column prop="sequenceId" label="问题顺序" width="160" />
       <el-table-column prop="title" label="题目" width="130" />
