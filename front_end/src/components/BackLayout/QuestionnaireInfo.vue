@@ -3,6 +3,7 @@ import {Search} from "@element-plus/icons-vue";
 import {ref} from 'vue';
 import axios from 'axios';
 import {computed ,onMounted } from 'vue';
+import router from "@/router/index.js";
 
 const keyword = ref(''); // 使用 ref 创建响应式数据
 const currentPage=ref(1);//当前页码
@@ -99,7 +100,12 @@ const searchFromData = () => {
 
 // 跳转到问卷ID为questionnaireId的问题信息页面
 const goToAnswerPage = (questionnaireId) => {
-  this.$router.push({ name: 'QuestionInfo', params: { questionnaireId: questionnaireId } });
+  router.push({
+    path: '/backlayout/QuestionInfo',
+    query: {
+      params: questionnaireId
+    }
+  })
 };
 </script>
 
@@ -133,7 +139,7 @@ const goToAnswerPage = (questionnaireId) => {
             <!--           问卷ID设置为链接形式，点击问卷ID后跳转到显示该问卷的问题的页面，并在该页面添加“显示回答的问卷内容信息”按钮-->
             <template #default="{ row }">
               <!-- 设置点击问卷ID时的跳转逻辑 -->
-              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)">{{ row.questionnaireId}}</el-link>
+              <el-link type="primary"  @click="router.push('/backlayout/QuestionInfo')"></el-link>
             </template>
           </el-table-column>
 

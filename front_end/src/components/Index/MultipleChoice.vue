@@ -48,6 +48,15 @@ const create=()=>{
   })
 }
 
+const cancel=()=>{
+  router.push({
+    path:"/index/choicepage",
+    query: {
+      params: id
+    }
+  })
+}
+
 
 const options = reactive([]);
 
@@ -90,7 +99,7 @@ const removeOption=(index)=>{
   </div>
 
   <el-button style="margin-top: 100px" type="success" @click="create()" >确认</el-button>
-  <el-button style="margin-left: 30px;margin-top: 100px" type="primary" @click="router.push('/index/choicepage')">返回</el-button>
+  <el-button style="margin-left: 30px;margin-top: 100px" type="primary" @click="cancel()">返回</el-button>
 
 </template>
 

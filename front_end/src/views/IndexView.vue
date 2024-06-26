@@ -41,17 +41,19 @@
     </el-row>
   </el-menu>
 
+  <div style="margin-top: 10px">
+    <el-button @click="goToAdminMode" type="primary">进入管理员模式</el-button>
+  </div>
+
   <div>
     <router-view></router-view>
   </div>
 
-  <div>
+  <div style="margin-top: 440px">
     <el-button @click="logout()" type="danger" plain>退出登录</el-button>
   </div>
 
-  <div>
-    <el-button @click="goToAdminMode" type="primary">进入管理员模式</el-button>
-  </div>
+
 </template>
 
 

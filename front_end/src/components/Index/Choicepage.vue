@@ -52,7 +52,7 @@ const Goblank=()=>{
 
   </div>
 
-  <el-button style="margin-left: 330px;margin-top: 30px" @click="router.push('/index/mypage')">
+  <el-button style="margin-left: 330px;margin-top: 30px" @click="router.push('/index/homepage')">
     返回
   </el-button>
 
