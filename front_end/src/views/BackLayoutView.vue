@@ -3,15 +3,14 @@ import { Search } from "@element-plus/icons-vue";
 import { ref, reactive } from 'vue';
 import { onMounted } from 'vue';
 import {get, post} from "@/net";
-import {ElMessage} from "element-plus";
+import {ElMessageBox,ElMessage} from "element-plus";
 import router from "@/router/index.js";
 
 const questionnaires = reactive([]);// 创建一个响应式的问卷列表
 const keyword = ref(''); // 使用 ref 创建响应式数据
-const currentPage=ref(1);//当前页码
-const pageSize=ref(3);//每页显示的条数
 const selectedRows=ref([]);//选中的行
-
+const startTime = ref(''); // 用于存储开始时间
+const endTime = ref(''); // 用于存储截止时间
 
 // 在组件挂载时或者需要时调用showData方法
  onMounted(() => {
@@ -39,7 +38,7 @@ const format = ({
 //   });
 // }
 
-const showData=(page = currentPage.value)=>{
+const showData=()=>{
   // 清除现有的问卷列表
   questionnaires.length = 0;
   get('/questionnaires/display-all', (message) => {
@@ -50,18 +49,12 @@ const showData=(page = currentPage.value)=>{
   })
 }
 
-
-// 分页事件处理函数
-const handleCurrentChange =  (newPage) => {
-  currentPage.value = newPage;
-};
-
 // 删除事件处理函数,执行批量删除操作
 const dels = () => {
   Promise.all(selectedRows.value.map(row => post('/questionnaires/delete', {
     questionnaireId: row.questionnaireId,
   }, (message) => {
-    showData(currentPage.value);
+    showData();
     if (selectedRows.value.length === 0) {
       ElMessage.success(message)
     }
@@ -73,14 +66,47 @@ const del = (index,row) => {
     questionnaireId: row.questionnaireId,
   },(message)=>{
     ElMessage.success(message)
-    showData(currentPage.value)
+    showData()
   })
 };
 
 // 编辑事件处理函数
 const edit = (index, row) => {
-  // 执行编辑操作
-  console.log('编辑第', index, '行数据', row);
+  goToAnswerPage(row.questionnaireId)
+};
+//发布该问卷
+const publish = (index, row) => {
+  // 弹出开始时间消息框
+  ElMessageBox.prompt('请输入问卷的开始发布时间', '开始时间', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    inputPattern: /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/,
+    inputErrorMessage: '时间格式不正确，请使用YYYY-MM-DD HH:MM:SS的格式'
+  }).then(({ value }) => {
+    startTime.value = value;
+    // 弹出截止时间消息框
+    ElMessageBox.prompt('请输入问卷的截止时间', '截止时间', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputPattern: /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/,
+      inputErrorMessage: '时间格式不正确，请使用YYYY-MM-DD HH:MM:SS的格式'
+    }).then(({ value }) => {
+      endTime.value = value;
+      // 发送数据到后端
+      post('/questionnaires/publish', {
+        questionnaireId: row.questionnaireId,
+        startTime: startTime.value,
+        endTime: endTime.value,
+      }, (message) => {
+        ElMessage.success(message);
+        showData();
+      });
+    }).catch(() => {
+      ElMessage.error('时间输入不正确，请重新输入');
+    });
+  }).catch(() => {
+    ElMessage.info('取消开始时间输入');
+  });
 };
 
 // 选中行事件处理函数
@@ -121,28 +147,29 @@ const goToAnswerPage = (questionnaireId) => {
     <header>
       <h1>问卷后台管理</h1>
     </header>
-    <div class="columns" style="width:100vw;height:100vh;overflow:hidden;display:flex">
-      <div class="column" style="background-color: aliceblue; width:100px;">
-        <div>
-          <!--   侧边栏内容    -->
-        </div>
-      </div>
+    <div class="columns" style="width:100vw;height:100vh;display:flex">
+
       <div class="column" style="background-color: white">
         <!--批量删除-->
         <div>
-          <el-row :gutter="10" style="position: absolute;top:160px;left:144px">
-            <el-button type="danger" @click="dels">批量删除</el-button>
+          <el-row :gutter="10" style="position: absolute;top:160px;left:65px">
+            <el-col :span="18" style="position: absolute;left:-5px;">
+              <el-button type="danger" @click="dels">批量删除</el-button>
+            </el-col>
+            <el-col :span="6" style="position: absolute;left:130px;">
+              <el-button type="success" @click="router.push('/index')">返回</el-button>
+            </el-col>
           </el-row>
         </div>
         <!--表格组件-->
-        <el-table :data="questionnaires" @selection-change="selected" border style="margin-top: 100px; margin-left: 40px;">
+        <el-table :data="questionnaires" @selection-change="selected" border style=" overflow-y: auto; margin-top: 100px; margin-left: 60px;width:1065px">
           <el-table-column type="selection" width="55"/>
 
-          <el-table-column prop="questionnaireId" label="问卷ID" width="100">
+          <el-table-column prop="questionnaireId" label="问卷ID" width="60">
             <!--           问卷ID设置为链接形式，点击问卷ID后跳转到显示该问卷的问题的页面，并在该页面添加“显示回答的问卷内容信息”按钮-->
             <template #default="{ row }">
               <!-- 设置点击问卷ID时的跳转逻辑 -->
-              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)" >{{ row.questionnaireId }}</el-link>
+              <el-link type="primary" @click="goToAnswerPage(row.questionnaireId)"> {{ row.questionnaireId }} </el-link>
             </template>
           </el-table-column>
           <el-table-column prop="title" label="问卷标题" width="160" />
@@ -152,25 +179,22 @@ const goToAnswerPage = (questionnaireId) => {
           <el-table-column prop="startTime" label="问卷开始时间" width="120" />
           <el-table-column prop="endTime" label="问卷结束时间" width="120" />
 
-          <el-table-column label="操作" width="140">
+          <el-table-column label="操作" width="200">
             <template #default="scope">
               <el-button size="small" type="primary" @click="edit(scope.$index,scope.row)">
                 编辑
 <!--                跳转到 首页->我的问卷->相应问卷的编辑问卷 处进行处理-->
               </el-button>
-              <el-button size="small" @click="del(scope.$index,scope.row)">
+              <el-button size="small" type="primary" @click="del(scope.$index,scope.row)">
                 删除
 <!--                跳转到 首页->我的问卷->相应问卷的删除问卷 处进行处理-->
+              </el-button>
+              <el-button size="small" type="primary" @click="publish(scope.$index,scope.row)">
+                发布
               </el-button>
             </template>
           </el-table-column>
         </el-table>
-<!--        分页组件-->
-        <div style="margin-top: 30px; margin-left: 40px;">
-          <el-pagination layout="prev,pager,next,jumper,total"
-                         :page-size="pageSize" :current-page="currentPage" :total="50"
-                         @current-change="handleCurrentChange"/>
-        </div>
 
 
       </div>
@@ -180,10 +204,10 @@ const goToAnswerPage = (questionnaireId) => {
   <!--请输入关键字查询那一行-->
   <div>
     <el-row :gutter="10" style="position: absolute;top:120px;">
-      <el-col :span="18" style="position: absolute;left:140px;">
+      <el-col :span="18" style="position: absolute;left:60px;">
         <input type="text" v-model="keyword" placeholder="请输入关键字查询" style="height:24px;">
       </el-col>
-      <el-col :span="6" style="position: absolute;left:320px;">
+      <el-col :span="6" style="position: absolute;left:250px;">
         <el-button type="success" plain @click="searchFromData()">
           <el-icon><Search/></el-icon>
           <span>搜索</span>

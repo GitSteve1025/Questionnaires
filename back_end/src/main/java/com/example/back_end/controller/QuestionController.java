@@ -160,7 +160,7 @@ public class QuestionController {
 
     // 删除问题
     @PostMapping("/delete")
-    public RestBean<String> deleteQuestion(@RequestParam("questionnaireId") Integer questionId) {
+    public RestBean<String> deleteQuestion(@RequestParam("questionId") Integer questionId) {
         Account account = authorizeService.currentAccount();
         Integer questionnaireId = questionService.getQuestionnaireIdOfQuestion(questionId);
         String s = questionService.deleteQuestion(account, questionId);
