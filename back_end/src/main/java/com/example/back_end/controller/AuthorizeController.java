@@ -9,11 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
@@ -98,7 +94,6 @@ public class AuthorizeController {
             return RestBean.failure(500,"内部错误，请联系管理员");
         }
     }
-
     @GetMapping("/currentUser")
     public RestBean<Account> getCurrentUser() {
         return RestBean.success(authorizeService.currentAccount());
