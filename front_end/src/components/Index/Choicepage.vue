@@ -38,21 +38,22 @@ const Goblank=()=>{
 </script>
 
 <template>
+
   <div style="margin-top: 40px">
     <el-button style="margin-left: 150px"  @click="Gosingle">
       单选题
     </el-button>
-    <el-button style="margin-left: 100px" @click="Gomultiple">
+    <el-button style="margin-left: 100px"  @click="Gomultiple">
       多选题
     </el-button>
 
-    <el-button style="margin-left: 100px" @click="Goblank">
+    <el-button style="margin-left: 100px"  @click="Goblank">
       填空题
     </el-button>
 
   </div>
 
-  <el-button style="margin-left: 330px;margin-top: 30px" @click="router.push('/index/homepage')">
+  <el-button  style="margin-left: 330px;margin-top: 30px" @click="router.push('/index/homepage')">
     返回
   </el-button>
 

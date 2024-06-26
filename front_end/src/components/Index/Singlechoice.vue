@@ -15,10 +15,7 @@ const choice=reactive({
 
 const format =reactive({
   title:[
-    {
-      required:true,message:'请输入标题',
-      min:1
-    }
+    ''
   ],
   necessary:[
     {
@@ -82,7 +79,7 @@ const removeOption=(index)=>{
         <el-icon><Memo /></el-icon>
       </template>
     </el-input>
-    <el-checkbox v-model="format.necessary" label="是否必答" size="large" span="20" /> <!--v-model="form.necessary"传入是否必答-->
+    <el-checkbox style="margin-left: 10px" v-model="format.necessary" label="是否必答" size="large" span="20" /> <!--v-model="form.necessary"传入是否必答-->
   </div>
 
 
@@ -90,7 +87,7 @@ const removeOption=(index)=>{
   <div v-for="(option, index) in options" :key="index" style="margin-top: 20px;display:flex;align-items:center">
     <el-form-item style="display: flex;" prop="">
       <!-- 删除按钮 -->
-      <el-button type="danger" size="small" style="margin-right: 8px;" @click="removeOption(index)">
+      <el-button type="danger" size="small" style="margin-left: 8px;" @click="removeOption(index)">
         删除
       </el-button>
       <!-- 输入框 -->
@@ -105,8 +102,8 @@ const removeOption=(index)=>{
 
 
 
-  <el-button style="margin-top: 100px" type="primary" @click="create()">确认</el-button>
-  <el-button style="margin-left: 30px;margin-top: 100px" type="primary" @click="cancel()">返回</el-button>
+  <el-button style="margin-top: 100px" type="success" @click="create()">确认</el-button>
+  <el-button style="margin-left: 30px;margin-top: 100px" type="info" @click="cancel()">返回</el-button>
 </template>
 
 <style scoped>

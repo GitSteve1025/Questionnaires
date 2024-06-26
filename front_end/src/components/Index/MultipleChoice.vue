@@ -75,7 +75,7 @@ const removeOption=(index)=>{
   <el-button style="margin-top: 50px" @click="Newoption">添加选项</el-button>
 
   <el-input v-model="format.title" placeholder="请输入标题" style="margin-top: 5px"></el-input>
-  <el-checkbox v-model="format.necessary" label="是否必答" size="large" /> <!--v-model="form.necessary"传入是否必答-->
+  <el-checkbox style="margin-left: 5px" v-model="format.necessary" label="是否必答" size="large" /> <!--v-model="form.necessary"传入是否必答-->
 
   <el-input v-model="format.minSelected" placeholder="请输入至少选择几个选项"></el-input>
   <el-input v-model="format.maxSelected" placeholder="请输入最多选择几个选项" style="margin-top: 10px"></el-input>
