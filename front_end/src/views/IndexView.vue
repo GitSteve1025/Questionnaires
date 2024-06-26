@@ -17,7 +17,7 @@
     <el-sub-menu index="2">
       <template #title>我的问卷</template>
       <el-menu-item index="2-1" @click="goToCreate" type="primary">创建问卷</el-menu-item>
-      <el-menu-item index="2-2">查看问卷</el-menu-item>
+      <el-menu-item index="2-2" @click="goToShow">查看问卷</el-menu-item>
       <el-menu-item index="2-3">item three</el-menu-item>
       <el-sub-menu index="2-4">
         <template #title>item four</template>
@@ -45,9 +45,13 @@
     <el-button @click="goToAdminMode" type="primary">进入管理员模式</el-button>
   </div>
 
+
+
   <div>
     <router-view></router-view>
   </div>
+
+
 
   <div style="margin-top: 440px">
     <el-button @click="logout()" type="danger" plain>退出登录</el-button>
@@ -102,6 +106,8 @@ const goToAdminMode = () => {
 const goToCreate=()=>{
   router.push('/index/mypage');
 };
+
+
 </script>
 
 
