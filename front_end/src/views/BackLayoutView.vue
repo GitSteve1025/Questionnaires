@@ -57,30 +57,11 @@ const del = (index,row) => {
   })
 };
 
-const check = () => {
-  ElMessageBox.prompt('请输入你要查看的问卷ID', '查看问卷填写情况', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    inputErrorMessage: 'ID',
-  })
-      .then(({ value }) => {
-        ElMessage({
-          type: 'success',
-          message: `页面检索成功`
-        });
-        let id=value;
-        // 使用 router.push 跳转页面
-        router.push({
-          path: `AnswerInfo`, // 将此路径替换为目标路径
-          query: { params:id } // 如果你需要将文件ID作为查询参数传递
-        });
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '返回',
-        });
-      });
+const check = (index, row) => {
+  router.push({
+    path: `/AnswerInfo`, // 将此路径替换为目标路径
+    query: { params:row.questionnaireId } // 如果你需要将文件ID作为查询参数传递
+  });
 };
 const shareId = (index, row) => {
   ElMessageBox.alert(row.questionnaireId,'问卷ID', {
@@ -181,9 +162,6 @@ const goToAnswerPage = (questionnaireId) => {
             <el-col :span="6" style="position: absolute;left:130px;">
               <el-button type="success" @click="returnl">返回</el-button>
             </el-col>
-            <el-col :span="6" style="position: absolute;left:240px;">
-              <el-button type="success" @click="check">查看问卷填写情况</el-button>
-            </el-col>
           </el-row>
         </div>
         <!--表格组件-->
@@ -212,6 +190,12 @@ const goToAnswerPage = (questionnaireId) => {
               </el-button>
               <el-button size="small" type="primary" @click="shareId(scope.$index,scope.row)">
                 分享
+              </el-button>
+              <el-button size="small" type="primary" v-if="scope.row.state!=='UNPUBLISHED'" @click="check(scope.$index,scope.row)">
+                查看填写情况
+              </el-button>
+              <el-button size="small" type="primary" v-else disabled>
+                查看填写情况
               </el-button>
             </template>
           </el-table-column>

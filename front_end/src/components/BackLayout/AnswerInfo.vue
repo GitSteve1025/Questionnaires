@@ -14,9 +14,13 @@ const fillAccount=reactive([]);//存储 填写问卷用户的账号和填写时�
 const getChoiceCounts = (questionId) => {
   return new Promise((resolve, reject) => {
     post('/info/choice', { questionId }, (message) => {
+      console.log(message)
       resolve(message);
     }, () => {});
   });
+  // post('/info/choice', { questionId }, (message) => {
+  //       console.log(message)
+  //     }, () => {});
 };
 //获取问题Id为questionId的填空题的填写信息
 const getBlankAnswers = (questionId) => {
@@ -31,7 +35,6 @@ const showQuestionData=()=>{
   post('/questionnaires/find',{
     questionnaireId:questionnaireId
   }, (message)=> {
-    console.log(message)
     for(let temp of message.choiceQuestions){
       let id = temp.sequenceId;
       questions.push(temp); // 将后端返回的问题数组存储到数组中
@@ -72,7 +75,6 @@ onMounted(() => {
   <div>
     <h1>问卷填写信息</h1>
 
-    <!--批量删除-->
     <div>
       <el-row :gutter="10" style="position: absolute;top:100px;">
         <el-col :span="6" style="position: absolute;left:80px;">
