@@ -1,5 +1,8 @@
 package com.example.back_end.controller;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.example.back_end.entity.Question.BlankQuestion.BlankQuestion;
 import com.example.back_end.entity.Question.ChoiceQuestion.Choice;
 import com.example.back_end.entity.Question.ChoiceQuestion.ChoiceQuestion;
@@ -16,8 +19,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 // @RequestParam 是前端必要参数
 // @RequestParam("questionnaireId json 格式
@@ -181,7 +186,7 @@ public class QuestionnaireController {
     // 问卷填写者层面
 
     // 获取问卷
-    @GetMapping("/get")
+    @PostMapping("/get")
     public RestBean<Questionnaire> getQuestionnaire(@RequestParam("questionnaireId") Integer questionnaireId) {
         Integer userId = questionnaireService.getUserIdOfQuestionnaire(questionnaireId);
         Account account = new Account();
@@ -219,10 +224,21 @@ public class QuestionnaireController {
 
     // 填写问卷
     @PostMapping("/fill")
-    public RestBean<String> fillQuestionnaire(@RequestParam("questionnaireId") Questionnaire questionnaire) {
+    public RestBean<String> fillQuestionnaire(@RequestParam("questionnaire") String text) {
+        JSONObject object =  JSON.parseObject(text);
+        System.out.println(text);
+        Integer questionnaireId = object.getInteger("questionnaireId");
+        JSONArray choiceQuestionsParams = object.getJSONArray("choiceQuestions");
+        List<ChoiceQuestion> choiceQuestions = choiceQuestionsParams.toJavaList(ChoiceQuestion.class);
+        JSONArray blankQuestionsParams = object.getJSONArray("blankQuestions");
+        List<BlankQuestion> blankQuestions = blankQuestionsParams.toJavaList(BlankQuestion.class);
+        Questionnaire questionnaire = questionnaireService.findQuestionnaire(questionnaireId);
         if (questionnaire == null || questionnaire.getState() == State.UNPUBLISHED) {
             return RestBean.failure(400, "问卷不存在");
         }
+        questionnaire.setQuestionnaireId(questionnaireId);
+        questionnaire.setChoiceQuestions((ArrayList<ChoiceQuestion>) choiceQuestions);
+        questionnaire.setBlankQuestions((ArrayList<BlankQuestion>) blankQuestions);
         Date currentTime = new Date();
         if (questionnaire.getStartTime().after(currentTime)) {
             return RestBean.failure(400, "问卷未开始");
@@ -230,12 +246,10 @@ public class QuestionnaireController {
         if (questionnaire.getEndTime().before(currentTime)) {
             return RestBean.failure(400, "问卷已截止");
         }
-
         String s = questionnaireService.checkQuestionnaire(questionnaire);
         if (s != null) {
             return RestBean.failure(400, s);
         }
-        System.out.println(questionnaire);
         Account account = authorizeService.currentAccount();
         infoService.insertQuestionnaireInfo(account, questionnaire);
         for (ChoiceQuestion choiceQuestion : questionnaire.getChoiceQuestions()) {
@@ -249,6 +263,7 @@ public class QuestionnaireController {
         }
         for (BlankQuestion blankQuestion : questionnaire.getBlankQuestions()) {
             if (blankQuestion.getState()) {
+                System.out.println(blankQuestion.getBlank());
                 if (blankQuestion.getBlank().getState()) {
                     infoService.insertBlankInfo(blankQuestion.getBlank());
                 }

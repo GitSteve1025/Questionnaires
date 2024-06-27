@@ -67,10 +67,16 @@ const router = createRouter({
           component:()=>import('@/components/Index/Blankchoice.vue')
         },
         {
+          path:'Checkpage',
+          name:'index-Checkpage',
+          component:()=>import('@/components/Index/Checkpage.vue')
+        },
+        {
           path:'ShowAllQuestion',
           name:'index-ShowAllQuestion',
           component:()=>import('@/components/Index/ShowAllQuestion.vue')
-        }
+        },
+
       ]
     },
     {

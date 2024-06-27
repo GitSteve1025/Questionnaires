@@ -37,7 +37,7 @@ const Goblank=()=>{
 
 const goToShow=()=>{
   router.push({
-    path:"/index/ShowAllQuestion",
+    path:"/index/Checkpage",
     query: {
       params: id
     }

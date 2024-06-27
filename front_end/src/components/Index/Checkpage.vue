@@ -44,37 +44,6 @@ const Questionnaire = reactive({
   endTime:null
 })
 
-const commit=()=>{
-  Questionnaire.questionnaireId = Id;
-  for (let temp of questions) {
-    let val = temp;
-    console.log(val);
-    if (val.category === "BLANK_QUESTION") {
-      if (val.blank.content.length > 0) {
-        val.state = true;
-        val.blank.state = true;
-      }
-      Questionnaire.blankQuestions.push(val);
-    } else {
-      if (val.selectedCount > 0) {
-        val.state = true;
-      }
-      Questionnaire.choiceQuestions.push(val);
-    }
-  }
-  post('/questionnaires/fill',{
-    questionnaire: JSON.stringify({
-      questionnaireId: Questionnaire.questionnaireId,
-      choiceQuestions: Questionnaire.choiceQuestions,
-      blankQuestions: Questionnaire.blankQuestions
-    })
-  },(message)=>{
-    ElMessage.success('提交成功')
-    router.push('/index')
-  })
-  //执行向后端的提交操作
-}
-
 // 在组件挂载时获取问卷数据
 onMounted(() => {
   showData();
@@ -155,7 +124,6 @@ const updateSelectedCount = (question, choice) => {
 
     </el-table>
 
-<el-button style="margin-top: 20px;margin-left: 40px" type="primary" @click="commit()">确认提交</el-button>
 
   </div>
 </template>

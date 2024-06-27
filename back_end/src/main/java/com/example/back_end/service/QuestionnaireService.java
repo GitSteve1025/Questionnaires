@@ -18,6 +18,8 @@ public interface QuestionnaireService {
     String updateQuestionnaire(Account account, Questionnaire questionnaire);
     // 获取问卷
     Questionnaire findQuestionnaire(Account account, int questionnaireId);
+    // 填写者获取问卷
+    Questionnaire findQuestionnaire(int questionnaireId);
     // 获取该用户所有问卷
     List<Questionnaire> getAllQuestionnaire(Account account);
     // 获取问卷题目数量

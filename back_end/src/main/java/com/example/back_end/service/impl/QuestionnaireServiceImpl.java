@@ -85,7 +85,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         }
         return null;
     }
-
+    @Override
+    public Questionnaire findQuestionnaire(int questionnaireId) {
+        return questionnaireMapper.getQuestionnaire(questionnaireId);
+    }
     // 获取该用户所有问卷
     @Override
     public List<Questionnaire> getAllQuestionnaire(Account account) {
