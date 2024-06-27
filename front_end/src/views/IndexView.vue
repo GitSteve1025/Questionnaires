@@ -18,7 +18,6 @@
       <template #title>我的问卷</template>
       <el-menu-item index="2-1" @click="goToCreate()" type="primary">创建问卷</el-menu-item>
       <el-menu-item index="2-2" @click="goToAdminMode()">查看问卷</el-menu-item>
-      <el-menu-item index="2-3" @click="gotoAnswer()">查看问卷填写情况</el-menu-item>
     </el-sub-menu>
     <el-menu-item index="3" @click="open()">填写问卷</el-menu-item>
     <el-menu-item index="4" @click="goToPerson()" type="primary">个人资料</el-menu-item>
@@ -87,31 +86,6 @@ const goToAdminMode = () => {
   router.push({ name: 'backlayout' }); // 假设backLayout是您定义的路由名称
 };
 
-const gotoAnswer = () =>{
-  ElMessageBox.prompt('请输入你要查看的问卷ID', '查看问卷填写情况', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    inputErrorMessage: 'ID',
-  })
-      .then(({ value }) => {
-        ElMessage({
-          type: 'success',
-          message: `页面检索成功`
-        });
-        let id=value;
-        // 使用 router.push 跳转页面
-        router.push({
-          path: `/backlayout/AnswerInfo`, // 将此路径替换为目标路径
-          query: { params:id } // 如果你需要将文件ID作为查询参数传递
-        });
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '返回',
-        });
-      });
-}
 
 const goToCreate=()=>{
   router.push('/index/mypage');

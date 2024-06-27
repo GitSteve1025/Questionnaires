@@ -90,11 +90,6 @@ const router = createRouter({
           component: ()=>import('@/components/BackLayout/InfoManage.vue'),
         },
         {
-          path:'AnswerInfo',
-          name:'backlayout-AnswerInfo',
-          component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
-        },
-        {
           path:'UserManage',
           name:'backlayout-UserManage',
           component:( )=>import('@/components/BackLayout/UserManage.vue'),
@@ -117,7 +112,12 @@ const router = createRouter({
       path:'/QuestionInfo',
       name:'QuestionInfo',
       component:()=>import('@/components/BackLayout/QuestionInfo.vue')
-    }
+    },
+    {
+      path:'/AnswerInfo',
+      name:'backlayout-AnswerInfo',
+      component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
+    },
 
 
   ]
