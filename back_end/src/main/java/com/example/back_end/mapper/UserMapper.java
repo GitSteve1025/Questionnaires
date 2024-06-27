@@ -15,6 +15,9 @@ public interface UserMapper {
 
     @Select("select * from db_account where username = #{text} or email = #{text}")
     AccountUser findAccountUserByNameOrEmail(String text);
+    // 利用 id 获取 Account
+    @Select("select * from db_account where id = #{id}")
+    Account findAccountById(int id);
 
     // 添加账号到数据库
     @Insert("insert into db_account (email, username, password) values (#{email}, #{username}, #{password})")
