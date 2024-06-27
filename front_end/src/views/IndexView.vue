@@ -34,15 +34,9 @@
     </el-row>
   </el-menu>
 
-
-
-
   <div>
     <router-view></router-view>
   </div>
-
-
-
 
 
 </template>
@@ -91,6 +85,7 @@ const logout = () => {
 const goToAdminMode = () => {
   router.push({ name: 'backlayout' }); // 假设backLayout是您定义的路由名称
 };
+
 
 const goToCreate=()=>{
   router.push('/index/mypage');

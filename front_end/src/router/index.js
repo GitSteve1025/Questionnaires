@@ -67,10 +67,16 @@ const router = createRouter({
           component:()=>import('@/components/Index/Blankchoice.vue')
         },
         {
+          path:'Checkpage',
+          name:'index-Checkpage',
+          component:()=>import('@/components/Index/Checkpage.vue')
+        },
+        {
           path:'ShowAllQuestion',
           name:'index-ShowAllQuestion',
           component:()=>import('@/components/Index/ShowAllQuestion.vue')
-        }
+        },
+
       ]
     },
     {
@@ -82,11 +88,6 @@ const router = createRouter({
           path:'InfoManage',
           name:'backlayout-InfoManage',
           component: ()=>import('@/components/BackLayout/InfoManage.vue'),
-        },
-        {
-          path:'AnswerInfo',
-          name:'backlayout-AnswerInfo',
-          component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
         },
         {
           path:'UserManage',
@@ -111,7 +112,12 @@ const router = createRouter({
       path:'/QuestionInfo',
       name:'QuestionInfo',
       component:()=>import('@/components/BackLayout/QuestionInfo.vue')
-    }
+    },
+    {
+      path:'/AnswerInfo',
+      name:'backlayout-AnswerInfo',
+      component:()=>import('@/components/BackLayout/AnswerInfo.vue'),
+    },
 
 
   ]
