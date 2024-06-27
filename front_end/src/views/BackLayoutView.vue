@@ -7,7 +7,7 @@ import {ElMessageBox,ElMessage} from "element-plus";
 import router from "@/router/index.js";
 
 const questionnaires = reactive([]);// 创建一个响应式的问卷列表
-const keyword = ref(''); // 使用 ref 创建响应式数据
+const keyword = ref(); // 使用 ref 创建响应式数据
 const selectedRows=ref([]);//选中的行
 const startTime = ref(''); // 用于存储开始时间
 const endTime = ref(''); // 用于存储截止时间
@@ -103,7 +103,9 @@ const publish = (index, row) => {
     ElMessage.info('取消开始时间输入');
   });
 };
-
+const returnl =()=>{
+  router.push('/index')
+}
 // 选中行事件处理函数
 const selected = (val) => {
   selectedRows.value = val;
@@ -114,10 +116,11 @@ const searchFromData = () => {
 //使用post会报"status": 405,"error": "Method Not Allowed",
 //使用get则无法将问卷Id传到后端	"status": 400,"error": "Bad Request",
   // 实现搜索逻辑
-  get('/questionnaires/find', (message)=>{
+  post('/questionnaires/find', {
+    questionnaireId : keyword,
+  },(message)=>{
     console.log(message)
     //更新表格数据，只显示搜索到的问卷的信息
-  },(message)=>{
   })
 };
 
@@ -151,7 +154,7 @@ const goToAnswerPage = (questionnaireId) => {
               <el-button type="danger" @click="dels">批量删除</el-button>
             </el-col>
             <el-col :span="6" style="position: absolute;left:130px;">
-              <el-button type="success" @click="router.push('/index')">返回</el-button>
+              <el-button type="success" @click="returnl">返回</el-button>
             </el-col>
           </el-row>
         </div>

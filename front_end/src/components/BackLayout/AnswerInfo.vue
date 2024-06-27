@@ -1,5 +1,8 @@
 <script setup>
 
+let Id=JSON.parse(route.query.params);
+
+
 </script>
 
 <template>
